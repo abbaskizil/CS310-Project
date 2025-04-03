@@ -1,0 +1,47 @@
+# Dart/Pub
+.dart_tool/
+.packages
+.pub-cache/
+build/
+
+# Flutter
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Pods/
+macos/Pods/
+*.flutter-plugins
+*.flutter-plugins-dependencies
+*.dart_tool/
+*.packages
+*.lock
+
+# Android
+android/.gradle/
+android/app/*.iml
+android/local.properties
+android/*.iml
+*.jks
+
+# VS Code
+.vscode/
+
+# Xcode
+*.xcworkspace
+*.xcodeproj
+*.xcuserdata
+*.swiftmodule
+*.swiftdoc
+*.xcscheme
+*.plist
+
+# IntelliJ
+.idea/
+*.iml
+
+# Others
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
