@@ -1,7 +1,8 @@
+import 'package:deneme1app/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
   _SignInPageState createState() => _SignInPageState();
@@ -22,19 +23,23 @@ class _SignInPageState extends State<SignInPage> {
         _isLoading = true;
       });
 
-      // TODO: Implement your sign-in logic here (e.g., Firebase Auth)
-      // For now, we just simulate a delay.
+      // TODO: for phase2 
+      // since we don't have a database now, delay only
       await Future.delayed(const Duration(seconds: 2));
 
       setState(() {
         _isLoading = false;
       });
 
-      // Navigate to home/profile page after successful login
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => HomePage()),
-      // );
+      // TODO:: Navigate to home/profile page after successful login
+
+
+
+      Navigator.pushReplacement(
+        context,
+        // sends user to home page with bottom navigation bar
+        MaterialPageRoute(builder: (context) => BottomNavigator()) 
+      );
     }
   }
 
@@ -49,10 +54,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // You can style the AppBar or remove it entirely
-      appBar: AppBar(
-        title: const Text('Welcome Back!'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Welcome Back!'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Form(
@@ -72,7 +74,7 @@ class _SignInPageState extends State<SignInPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  // Add more robust email validation if needed
+                  // TODO:: add proper validation for future reference 
                   return null;
                 },
               ),
@@ -96,13 +98,21 @@ class _SignInPageState extends State<SignInPage> {
               ),
               const SizedBox(height: 8),
 
-              // Forgot Password
+              // Forgot Password does nothing at the moment 
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Handle "Forgot Password"
-                  },
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Center(child: Text("dummy button")),
+                            actions: [],
+                          );
+                        },
+                      );
+                    },
                   child: const Text('Forgot your password?'),
                 ),
               ),
@@ -113,9 +123,10 @@ class _SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _signIn,
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Sign In'),
+                  child:
+                      _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('Sign In'),
                 ),
               ),
               const SizedBox(height: 16),
@@ -126,14 +137,30 @@ class _SignInPageState extends State<SignInPage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to Terms of Service page
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Center(child: Text("terms of service")),
+                            actions: [],
+                          );
+                        },
+                      );
                     },
                     child: const Text('Terms of Service'),
                   ),
                   const Text(' | '),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to Privacy Policy page
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Center(child: Text("privacy policy")),
+                            actions: [],
+                          );
+                        },
+                      );
                     },
                     child: const Text('Privacy Policy'),
                   ),
