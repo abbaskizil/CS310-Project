@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'AccountPrivacy.dart';
-import 'AccountSettings.dart';
-import 'ContactUs.dart';
-import 'UserAgreement.dart';
+
 void main() {
   runApp(MaterialApp(
     home:SettingsScreen(),
@@ -307,3 +304,135 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+
+class AccountPrivacyScreen extends StatelessWidget {
+  const AccountPrivacyScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+
+            'Account Privacy Screen',
+            style:TextStyle(
+                color: Colors.black
+            )),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Welcome to the Account Privacy Screen!',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AccountSettingsScreen extends StatelessWidget {
+  const AccountSettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        title: const Text('Account Settings Screen',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Welcome to the Account Settings Screen!',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class  ContactUsScreen extends StatelessWidget {
+  const  ContactUsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        title: const Text('Contact Us Screen',
+          style: TextStyle(color: Colors.black),),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Welcome to the Contact Us Screen!',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UserAgreementScreen extends StatelessWidget {
+  const UserAgreementScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        title: const Text('User Agreement Screen',
+          style: TextStyle(color: Colors.black),),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Welcome to the User Agreement Screen!',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
