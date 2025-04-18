@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/img_4.png',
+              'assets/AthleTech_logo.png',
               width: 150,
             ),
             const SizedBox(height: 20),

@@ -34,7 +34,7 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/img.png', width: 40, height: 40),
+                    Image.asset('assets/AccountPrivacy_image.png', width: 40, height: 40),
                 
                     Expanded(
                       child: Container(
@@ -101,7 +101,7 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/img_1.png', width: 40, height: 40),
+                    Image.asset('assets/ContactUs_image.png', width: 40, height: 40),
                 
                     Expanded(
                       child: Container(
@@ -169,7 +169,7 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/img_2.png', width: 40, height: 40),
+                    Image.asset('assets/UserAgreement_image.png', width: 40, height: 40),
                 
                     Expanded(
                       child: Container(
@@ -235,7 +235,7 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/img_3.png', width: 40, height: 40),
+                    Image.asset('assets/AccountSettings_image.png', width: 40, height: 40),
                 
                     Expanded(
                       child: Container(
