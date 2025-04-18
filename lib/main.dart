@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/sign_in_page.dart';
-import 'screens/profile_page.dart';
-import 'screens/register_page.dart';
 import 'screens/SplashScreen.dart';
-import 'package:deneme1app/screens/bmi_page.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,4 +1,3 @@
-import 'package:deneme1app/screens/sign_in_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {

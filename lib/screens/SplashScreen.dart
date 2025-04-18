@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'settings.dart';
 import 'sign_in_page.dart';
 
 void main() {
