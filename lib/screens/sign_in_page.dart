@@ -1,4 +1,5 @@
 import 'package:deneme1app/screens/profile_page.dart';
+import 'package:deneme1app/screens/register_page.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatefulWidget {
@@ -132,6 +133,7 @@ class _SignInPageState extends State<SignInPage> {
               const SizedBox(height: 16),
 
               // Terms of Service & Privacy Policy
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -140,9 +142,8 @@ class _SignInPageState extends State<SignInPage> {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
+                          return const AlertDialog(
                             title: Center(child: Text("terms of service")),
-                            actions: [],
                           );
                         },
                       );
@@ -155,15 +156,40 @@ class _SignInPageState extends State<SignInPage> {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
+                          return const AlertDialog(
                             title: Center(child: Text("privacy policy")),
-                            actions: [],
                           );
                         },
                       );
                     },
                     child: const Text('Privacy Policy'),
                   ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account? "),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const RegisterPage()),
+                      );
+                    },
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ],

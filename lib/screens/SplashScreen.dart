@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'settings.dart';
+import 'sign_in_page.dart';
 
 void main() {
   runApp(const AthleTechApp());
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+        MaterialPageRoute(builder: (context) => const SignInPage()),
       );
     });
   }
