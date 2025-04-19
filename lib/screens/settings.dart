@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(home: SettingsScreen()));
-}
+
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
