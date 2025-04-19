@@ -3,7 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
+  const CalendarPage({super.key});
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -101,8 +101,8 @@ class _TimeField extends StatelessWidget {
     required this.label,
     required this.time,
     required this.onTap,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final String time;

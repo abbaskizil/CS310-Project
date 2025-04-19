@@ -7,14 +7,14 @@ import 'bmi_page.dart';
 // import 'activity_entry_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     // A local helper to simplify icon → route mapping.
-    Widget _tool(IconData icon, String label, Widget dest) => _ToolIcon(
+    Widget tool(IconData icon, String label, Widget dest) => _ToolIcon(
           icon: icon,
           label: label,
           onTap: () => Navigator.push(
@@ -64,9 +64,9 @@ class HomePage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _tool(CupertinoIcons.calendar, 'Calendar', const CalendarPage()),
-                      _tool(Icons.monitor_weight_outlined, 'BMI', const BmiPage()),
-                      _tool(Icons.local_fire_department, 'Calorie tracker', const CalorieTracker()),
+                      tool(CupertinoIcons.calendar, 'Calendar', const CalendarPage()),
+                      tool(Icons.monitor_weight_outlined, 'BMI', const BmiPage()),
+                      tool(Icons.local_fire_department, 'Calorie tracker', const CalorieTracker()),
                       // _tool(CupertinoIcons.chart_pie, 'Activity Entry',
                       //     const ActivityEntryPage()),
                     ],
@@ -103,8 +103,7 @@ class HomePage extends StatelessWidget {
 }
 
 class _ActionChip extends StatelessWidget {
-  const _ActionChip({required this.icon, required this.label, Key? key})
-      : super(key: key);
+  const _ActionChip({required this.icon, required this.label, super.key});
   final IconData icon;
   final String label;
 
@@ -123,8 +122,7 @@ class _ActionChip extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.onTap, Key? key})
-      : super(key: key);
+  const _SectionHeader({required this.title, required this.onTap, super.key});
   final String title;
   final VoidCallback onTap;
 
@@ -151,8 +149,8 @@ class _ToolIcon extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final IconData icon;
   final String label;
@@ -183,8 +181,7 @@ class _ToolIcon extends StatelessWidget {
 }
 
 class _HighlightCard extends StatelessWidget {
-  const _HighlightCard({required this.asset, required this.title, Key? key})
-      : super(key: key);
+  const _HighlightCard({required this.asset, required this.title, super.key});
   final String asset;
   final String title;
 
