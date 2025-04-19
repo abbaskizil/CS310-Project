@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
+import 'package:athletech/utilities/padding.dart';
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -99,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Enter your full name',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  contentPadding: const EdgeInsets.all(15),
+                  contentPadding: AppPaddings.all16,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -117,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Enter your email',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  contentPadding: const EdgeInsets.all(15),
+                  contentPadding: AppPaddings.all16,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -143,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Enter password',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  contentPadding: const EdgeInsets.all(15),
+                  contentPadding: AppPaddings.all16,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -168,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: 'Confirm password',
                   filled: true,
                   fillColor: Colors.grey[100],
-                  contentPadding: const EdgeInsets.all(15),
+                  contentPadding: AppPaddings.all16,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),

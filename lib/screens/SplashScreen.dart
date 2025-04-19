@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'sign_in_page.dart';
+import 'package:athletech/utilities/padding.dart';
 
 
 class AthleTechApp extends StatelessWidget {
@@ -90,7 +91,7 @@ class ModeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: AppPaddings.horizontal16Vertical8,
       decoration: BoxDecoration(
         color: Colors.blueGrey[800],
         borderRadius: BorderRadius.circular(20),

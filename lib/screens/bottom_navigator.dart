@@ -1,5 +1,7 @@
+import 'package:athletech/screens/activity_entry_page.dart';
 import 'package:athletech/screens/calendar_day.dart';
 import 'package:athletech/screens/calendar_page.dart';
+import 'package:athletech/screens/chat_screen.dart';
 import 'package:athletech/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
@@ -24,12 +26,10 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   final List<Widget> _pages = [
 
-    // TODO:: change placeholders to real screens when added. 
     HomePage(),
-    Pagecalendar(),
-    Center(child: Text('Chat Page')),
+    ChatScreen(),
+    ActivityEntryApp(),
     CalendarPage(),
-
     ProfilePage(),
   ];
 

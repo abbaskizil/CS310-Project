@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:athletech/utilities/padding.dart';
 
 
 class AthleTechApp extends StatelessWidget {
@@ -96,13 +96,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Add your navigation logic here
-            Navigator.of(context).pop();
-          },
-        ),
         title: Row(
           children: [
             CircleAvatar(
@@ -120,7 +113,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
+              padding: AppPaddings.all12,
               reverse: true, // Helps with keyboard appearance
               itemCount: _messages.length,
               itemBuilder: (context, index) {
@@ -157,7 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: const InputDecoration(
                 hintText: "Message...",
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                contentPadding: AppPaddings.onlyLeft12,
               ),
               onSubmitted: (_) => _sendMessage(),
             ),

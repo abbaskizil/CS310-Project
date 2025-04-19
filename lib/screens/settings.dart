@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:athletech/utilities/padding.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -32,8 +31,12 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/AccountPrivacy_image.png', width: 40, height: 40),
-                
+                    Image.asset(
+                      'assets/AccountPrivacy_image.png',
+                      width: 40,
+                      height: 40,
+                    ),
+
                     Expanded(
                       child: Container(
                         height: 50,
@@ -48,7 +51,7 @@ class SettingsScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(width: 16),
-                
+
                             Text(
                               '  Account Privacy',
                               style: TextStyle(
@@ -57,15 +60,16 @@ class SettingsScreen extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                
+
                             Spacer(),
-                
+
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AccountPrivacyScreen(),
+                                    builder:
+                                        (context) => AccountPrivacyScreen(),
                                   ),
                                 );
                               },
@@ -81,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                
+
                             SizedBox(width: 16),
                           ],
                         ),
@@ -99,8 +103,12 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/ContactUs_image.png', width: 40, height: 40),
-                
+                    Image.asset(
+                      'assets/ContactUs_image.png',
+                      width: 40,
+                      height: 40,
+                    ),
+
                     Expanded(
                       child: Container(
                         height: 50,
@@ -115,7 +123,7 @@ class SettingsScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             const SizedBox(width: 16),
-                
+
                             const Text(
                               '  Contact Us',
                               style: TextStyle(
@@ -124,9 +132,9 @@ class SettingsScreen extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                
+
                             const Spacer(),
-                
+
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -148,7 +156,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                
+
                             SizedBox(width: 16),
                           ],
                         ),
@@ -167,8 +175,12 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/UserAgreement_image.png', width: 40, height: 40),
-                
+                    Image.asset(
+                      'assets/UserAgreement_image.png',
+                      width: 40,
+                      height: 40,
+                    ),
+
                     Expanded(
                       child: Container(
                         height: 50,
@@ -183,7 +195,7 @@ class SettingsScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             SizedBox(width: 16),
-                
+
                             Text(
                               '  User Agreement',
                               style: TextStyle(
@@ -192,9 +204,9 @@ class SettingsScreen extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                
+
                             Spacer(),
-                
+
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -233,8 +245,12 @@ class SettingsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/AccountSettings_image.png', width: 40, height: 40),
-                
+                    Image.asset(
+                      'assets/AccountSettings_image.png',
+                      width: 40,
+                      height: 40,
+                    ),
+
                     Expanded(
                       child: Container(
                         height: 50,
@@ -249,7 +265,7 @@ class SettingsScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             const SizedBox(width: 16),
-                
+
                             const Text(
                               '  Account Settings',
                               style: TextStyle(
@@ -258,15 +274,16 @@ class SettingsScreen extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
-                
+
                             const Spacer(),
-                
+
                             TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AccountSettingsScreen(),
+                                    builder:
+                                        (context) => AccountSettingsScreen(),
                                   ),
                                 );
                               },
@@ -282,7 +299,7 @@ class SettingsScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                
+
                             const SizedBox(width: 16),
                           ],
                         ),

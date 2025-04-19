@@ -1,6 +1,8 @@
 import 'package:athletech/screens/settings.dart';
 import 'package:flutter/material.dart';
 
+import 'package:athletech/utilities/padding.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -51,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       // bottomNavigationBar: null, // <-------------------
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: AppPaddings.all16,
         child: Column(
           children: [
             // Profile picture or placeholder
@@ -149,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 2,
       child: Container(
         width: 100,
-        padding: const EdgeInsets.all(16),
+        padding: AppPaddings.all16,
         child: Column(
           children: [
             Text(
@@ -180,7 +182,7 @@ class EditProfilePage extends StatelessWidget {
         title: const Text('Edit Profile'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: AppPaddings.onlyLeft12,
         child: Column(
           children: [
             const SizedBox(height: 20),
@@ -223,7 +225,7 @@ class EditProfilePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: AppPaddings.all16,
                 child: Column(
                   children: const [
                     ProfileItem(label: 'Name', value: 'sampleName'),
