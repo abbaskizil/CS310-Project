@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 
 
 Widget build(BuildContext context) {
@@ -102,6 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.appBarColor,
         title: Row(
           children: [
             CircleAvatar(

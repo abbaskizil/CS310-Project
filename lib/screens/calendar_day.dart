@@ -1,6 +1,7 @@
 import 'package:athletech/utilities/padding.dart';
-import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 import 'activity_entry_page.dart';
 
 class Pagecalendar extends StatefulWidget {
@@ -78,7 +79,7 @@ class _PagecalendarState extends State<Pagecalendar> {
       appBar: AppBar(
         title: Text('AthleTech', style: kAppBarTitleTextStyle),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.appBarColor,
         elevation: 0,
         foregroundColor: Colors.black,
       ),

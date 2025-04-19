@@ -1,5 +1,6 @@
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 import 'package:flutter/material.dart';
 
 
@@ -41,8 +42,8 @@ class _BmiPageState extends State<BmiPage> {
       appBar: AppBar(
         title: Text('BMI Calculator', style: kAppBarTitleTextStyle,),
         centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color.fromARGB(255, 8, 6, 6),
+        backgroundColor: AppColors.appBarColor,
+
         elevation: 0,
       ),
       body: Padding(

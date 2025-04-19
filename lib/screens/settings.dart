@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -10,7 +11,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.appBarColor,
         title: Text(
           'Settings',
           style: kAppBarTitleTextStyle,
