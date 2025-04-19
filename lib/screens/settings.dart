@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,11 +13,7 @@ class SettingsScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Text(
           'Settings',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+          style: kAppBarTitleTextStyle,
         ),
       ),
 
@@ -54,11 +51,7 @@ class SettingsScreen extends StatelessWidget {
 
                             Text(
                               '  Account Privacy',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: kButtonDarkTextStyle,
                             ),
 
                             Spacer(),
@@ -124,13 +117,9 @@ class SettingsScreen extends StatelessWidget {
                           children: [
                             const SizedBox(width: 16),
 
-                            const Text(
+                            Text(
                               '  Contact Us',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: kButtonDarkTextStyle,
                             ),
 
                             const Spacer(),
@@ -198,11 +187,7 @@ class SettingsScreen extends StatelessWidget {
 
                             Text(
                               '  User Agreement',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: kButtonDarkTextStyle,
                             ),
 
                             Spacer(),
@@ -266,13 +251,9 @@ class SettingsScreen extends StatelessWidget {
                           children: [
                             const SizedBox(width: 16),
 
-                            const Text(
+                            Text(
                               '  Account Settings',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
+                              style: kButtonDarkTextStyle,
                             ),
 
                             const Spacer(),
