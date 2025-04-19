@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'calendar_day.dart';
 import 'package:intl/intl.dart';
 
 void main() => runApp(ActivityEntryApp());
@@ -73,7 +74,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
       },
       {
         'label': 'Core&Abs',
-        'image': 'https://askbart.org/wp-content/uploads/2024/11/7-Best-Best-Lower-Abs-Exercise-for-Women.webp'
+        'image': 'https://hips.hearstapps.com/menshealth-uk/main/thumbs/26789/abs.jpg?resize=980:*'
       },
       {
         'label': 'Pilates',
@@ -226,7 +227,9 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                // Submission logic can be added here
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Pagecalendar()),
+                  );
               },
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
