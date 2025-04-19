@@ -1,4 +1,5 @@
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
 
 
@@ -26,7 +27,7 @@ class _BmiPageState extends State<BmiPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Your BMI'),
+          title: Text('Your BMI', style: kButtonLightTextStyle,),
           content: Text(bmi.toStringAsFixed(2)),
         ),
       );
@@ -38,7 +39,7 @@ class _BmiPageState extends State<BmiPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('BMI Calculator'),
+        title: Text('BMI Calculator', style: kAppBarTitleTextStyle,),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: const Color.fromARGB(255, 8, 6, 6),
@@ -56,7 +57,7 @@ class _BmiPageState extends State<BmiPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('Age'),
+            Text('Age', style: kButtonLightTextStyle,),
             SizedBox(height: 5),
             TextField(
               controller: ageController,
@@ -70,7 +71,7 @@ class _BmiPageState extends State<BmiPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('Gender'),
+            Text('Gender', style: kButtonLightTextStyle,),
             Row(
               children: [
                 Radio(
@@ -82,7 +83,7 @@ class _BmiPageState extends State<BmiPage> {
                     });
                   },
                 ),
-                Text('Male'),
+                Text('Male', style: kButtonLightTextStyle,),
                 Radio(
                   value: 'Female',
                   groupValue: gender,
@@ -92,11 +93,11 @@ class _BmiPageState extends State<BmiPage> {
                     });
                   },
                 ),
-                Text('Female'),
+                Text('Female', style: kButtonLightTextStyle,),
               ],
             ),
             SizedBox(height: 10),
-            Text('Height'),
+            Text('Height', style: kButtonLightTextStyle,),
             SizedBox(height: 5),
             TextField(
               controller: heightController,
@@ -111,7 +112,7 @@ class _BmiPageState extends State<BmiPage> {
               ),
             ),
             SizedBox(height: 20),
-            Text('Weight'),
+            Text('Weight', style: kButtonLightTextStyle,),
             SizedBox(height: 5),
             TextField(
               controller: weightController,
@@ -132,7 +133,7 @@ class _BmiPageState extends State<BmiPage> {
                 backgroundColor: Colors.grey[300],
                 foregroundColor: Colors.black,
               ),
-              child: Text('Calculate BMI'),
+              child: Text('Calculate BMI', style: kButtonLightTextStyle,),
             ),
             SizedBox(height: 30),
             Center(
@@ -147,7 +148,7 @@ class _BmiPageState extends State<BmiPage> {
                 ),
                 child: Text(
                   'Go to ChatBox',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: kButtonLightTextStyle,
                 ),
               ),
             ),

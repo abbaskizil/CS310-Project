@@ -1,4 +1,5 @@
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
 
 class CalorieEntry {
@@ -51,7 +52,7 @@ class _CalorieTrackerState extends State<CalorieTracker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calorie Tracker'),
+        title: Text('Calorie Tracker', style: kAppBarTitleTextStyle,),
         centerTitle: true,
       ),
       body: Padding(
@@ -78,14 +79,14 @@ class _CalorieTrackerState extends State<CalorieTracker> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: _addEntry,
-              child: const Text('Add Entry'),
+              child: Text('Add Entry', style: kButtonLightTextStyle,),
             ),
             const SizedBox(height: 16),
 
             // List of calorie entries
             Expanded(
               child: _entries.isEmpty
-                  ? const Center(child: Text('No entries yet.'))
+                  ? Center(child: Text('No entries yet.', style: kButtonLightTextStyle,))
                   : ListView.builder(
                       itemCount: _entries.length,
                       itemBuilder: (context, index) {

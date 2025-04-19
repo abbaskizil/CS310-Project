@@ -1,3 +1,4 @@
+import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:athletech/utilities/padding.dart';
@@ -34,7 +35,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Calendar')),
+      appBar: AppBar(title: Text('Calendar', style: kAppBarTitleTextStyle,)),
       body: Padding(
         padding: AppPaddings.all16,
         child: Column(

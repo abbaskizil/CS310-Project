@@ -94,7 +94,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
         padding: AppPaddings.all16,
         child: ListView(
           children: [
-            Text("Select Workout Style", style: Theme.of(context).textTheme.titleMedium),
+            Text("Select Workout Style", style: kButtonLightTextStyle),
             const SizedBox(height: 10),
             GridView.count(
               shrinkWrap: true,
@@ -150,24 +150,24 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
             ),
             const SizedBox(height: 20),
             ListTile(
-              title: Text("Date"),
+              title: Text("Date", style: kButtonLightTextStyle,),
               trailing: Text(dateString),
               onTap: _pickDate,
             ),
             ListTile(
-              title: Text("Time"),
+              title: Text("Time", style: kButtonLightTextStyle,),
               trailing: Text(timeString),
               onTap: _pickTime,
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Text("Duration: ", style: TextStyle(fontSize: 16)),
+                Text("Duration: ", style: kButtonLightTextStyle),
                 IconButton(
                   onPressed: () => setState(() => duration = duration > 0 ? duration - 1 : 0),
                   icon: Icon(Icons.remove_circle_outline),
                 ),
-                Text("$duration minutes", style: TextStyle(fontWeight: FontWeight.w500)),
+                Text("$duration minutes", style: kButtonLightTextStyle),
                 IconButton(
                   onPressed: () => setState(() => duration++),
                   icon: Icon(Icons.add_circle_outline),
@@ -175,7 +175,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
               ],
             ),
             const SizedBox(height: 16),
-            Text("Intensity Level", style: TextStyle(fontSize: 16)),
+            Text("Intensity Level", style: kButtonLightTextStyle),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(5, (index) {
@@ -195,6 +195,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 labelText: 'Burned Calorie',
                 border: OutlineInputBorder(),
               ),
+              style: kButtonLightTextStyle,
             ),
             const SizedBox(height: 16),
             Row(
@@ -235,7 +236,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
               },
               child: Padding(
                 padding: AppPaddings.all12,
-                child: Text("Create the Activity", style: TextStyle(fontSize: 16)),
+                child: Text("Create the Activity", style: kButtonLightTextStyle),
               ),
             )
           ],
