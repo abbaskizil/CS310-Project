@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -64,9 +65,9 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text(
+        title:  Text(
           'Register',
-          style: TextStyle(color: Colors.black, letterSpacing: 2.0, fontWeight: FontWeight.bold),
+          style: kAppBarTitleTextStyle,
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
@@ -79,10 +80,10 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(
+              Center(
                 child: Text(
                   'Welcome to AthleTech!',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: kButtonDarkTextStyle,
                 ),
               ),
               const SizedBox(height: 8),

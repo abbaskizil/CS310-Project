@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'sign_in_page.dart';
 import 'package:athletech/utilities/padding.dart';
-
+import 'package:athletech/utilities/styles.dart';
 
 class AthleTechApp extends StatelessWidget {
   const AthleTechApp({super.key});
@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A1B20),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,21 +50,14 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 150,
             ),
             const SizedBox(height: 20),
-            const Text(
+             Text(
               'AthleTech',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: kAppBarTitleTextStyle,
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Your Fitness Journey Companion',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.blueGrey,
-              ),
+              style: kButtonDarkTextStyle,
             ),
             const SizedBox(height: 30),
             Row(
@@ -98,7 +91,7 @@ class ModeButton extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white),
+        style: kAppBarTitleTextStyle,
       ),
     );
   }

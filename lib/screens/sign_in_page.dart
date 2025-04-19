@@ -2,7 +2,7 @@ import 'register_page.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigator.dart';
 import 'package:athletech/utilities/padding.dart';
-
+import 'package:athletech/utilities/styles.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -49,12 +49,16 @@ class _SignInPageState extends State<SignInPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Invalid Form'),
-            content: const Text('Please correct the errors in the form before submitting.'),
+            title: Text('Invalid Form',
+            style: kButtonLightTextStyle,),
+            
+            content: Text('Please correct the errors in the form before submitting.',
+            style: kButtonLightTextStyle,),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
+                child: Text('OK',
+                style: kButtonLightTextStyle,),
               ),
             ],
           );
@@ -74,7 +78,8 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome Back!'),
+        title: Text('Welcome Back!',
+        style: kAppBarTitleTextStyle,),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -142,7 +147,8 @@ class _SignInPageState extends State<SignInPage> {
                       },
                     );
                   },
-                  child: const Text('Forgot your password?'),
+                  child: Text('Forgot your password?',
+                  style: kButtonLightTextStyle),
                 ),
               ),
               const SizedBox(height: 16),
@@ -154,7 +160,8 @@ class _SignInPageState extends State<SignInPage> {
                   onPressed: _isLoading ? null : _signIn,
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Sign In'),
+                      :  Text('Sign In',
+                      style: kButtonLightTextStyle,),
                 ),
               ),
               const SizedBox(height: 16),
