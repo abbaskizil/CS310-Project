@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'activity_entry_page.dart';
 
 class Pagecalendar extends StatelessWidget {
   const Pagecalendar({super.key});
@@ -65,7 +66,11 @@ class Pagecalendar extends StatelessWidget {
             // CREATE ACTIVITY
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ActivityEntryApp()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
