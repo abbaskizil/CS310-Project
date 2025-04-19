@@ -1,6 +1,8 @@
 import 'register_page.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigator.dart';
+import 'package:athletech/utilities/padding.dart';
+
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -32,6 +34,9 @@ class _SignInPageState extends State<SignInPage> {
       });
 
       // Navigate to home/profile page after successful login
+      // Navigator.pushNamed(context, '/bottom_navigator');
+  
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -73,7 +78,7 @@ class _SignInPageState extends State<SignInPage> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: AppPaddings.horizontal20Vertical12,
         child: Form(
           key: _formKey,
           child: Column(

@@ -1,3 +1,6 @@
+import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 import 'package:flutter/material.dart';
 import 'calendar_day.dart';
 import 'package:intl/intl.dart';
@@ -84,11 +87,11 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Activity Entry"),
+        title: Text("Activity Entry", style: kAppBarTitleTextStyle,),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: AppPaddings.all16,
         child: ListView(
           children: [
             Text("Select Workout Style", style: Theme.of(context).textTheme.titleMedium),
@@ -231,7 +234,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                   );
               },
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: AppPaddings.all12,
                 child: Text("Create the Activity", style: TextStyle(fontSize: 16)),
               ),
             )

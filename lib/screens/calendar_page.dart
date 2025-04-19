@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
+import 'package:athletech/utilities/padding.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -36,7 +36,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Calendar')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: AppPaddings.all16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

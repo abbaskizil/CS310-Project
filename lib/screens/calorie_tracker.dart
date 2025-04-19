@@ -1,3 +1,4 @@
+import 'package:athletech/utilities/padding.dart';
 import 'package:flutter/material.dart';
 
 class CalorieEntry {
@@ -54,7 +55,7 @@ class _CalorieTrackerState extends State<CalorieTracker> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: AppPaddings.all16,
         child: Column(
           children: [
             // Input fields for new entry

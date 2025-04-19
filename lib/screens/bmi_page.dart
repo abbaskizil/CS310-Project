@@ -1,3 +1,4 @@
+import 'package:athletech/utilities/padding.dart';
 import 'package:flutter/material.dart';
 
 
@@ -40,11 +41,11 @@ class _BmiPageState extends State<BmiPage> {
         title: Text('BMI Calculator'),
         centerTitle: true,
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        foregroundColor: const Color.fromARGB(255, 8, 6, 6),
         elevation: 0,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(30, 20, 30, 10),
+        padding: AppPaddings.all12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -142,7 +143,7 @@ class _BmiPageState extends State<BmiPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[300],
                   foregroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: AppPaddings.all12,
                 ),
                 child: Text(
                   'Go to ChatBox',

@@ -1,10 +1,10 @@
 import 'package:athletech/screens/calorie_tracker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'calendar_page.dart';
 import 'bmi_page.dart';
 import 'activity_entry_page.dart';
+import 'package:athletech/utilities/padding.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,14 +14,11 @@ class HomePage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     // A local helper to simplify icon → route mapping.
-    Widget tool(IconData icon, String label, Widget dest) => _ToolIcon(
-          icon: icon,
-          label: label,
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => dest),
-          ),
-        );
+    Widget tool(IconData icon, String label, String dest) => _ToolIcon(
+      icon: icon,
+      label: label,
+      onTap: () => Navigator.pushNamed(context, dest),
+    );
 
     return SafeArea(
       child: CustomScrollView(
@@ -35,15 +32,19 @@ class HomePage extends StatelessWidget {
                   Center(
                     child: Text(
                       'AtheleTech',
-                      style: textTheme.headlineMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      _ActionChip(icon: Icons.favorite_border, label: 'Favorites'),
+                      _ActionChip(
+                        icon: Icons.favorite_border,
+                        label: 'Favorites',
+                      ),
                       _ActionChip(icon: Icons.history, label: 'History'),
                       _ActionChip(icon: Icons.smart_toy_outlined, label: 'AI'),
                     ],
@@ -64,11 +65,17 @@ class HomePage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      tool(CupertinoIcons.calendar, 'Calendar', const CalendarPage()),
-                      tool(Icons.monitor_weight_outlined, 'BMI', const BmiPage()),
-                      tool(Icons.local_fire_department, 'Calorie tracker', const CalorieTracker()),
-                      tool(CupertinoIcons.chart_pie, 'Activity Entry',
-                      const ActivityEntryPage()),
+                      tool(Icons.monitor_weight_outlined, 'BMI', '/bmi'),
+                      tool(
+                        Icons.local_fire_department,
+                        'Calorie tracker',
+                        '/CalorieTracker',
+                      ),
+                      tool(
+                        CupertinoIcons.chart_pie,
+                        'Activity Entry',
+                        '/activity_entry',
+                      ),
                     ],
                   ),
                   const SizedBox(height: 32),
@@ -82,7 +89,7 @@ class HomePage extends StatelessWidget {
               height: 220,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(left: 16, right: 8),
+                padding: AppPaddings.all12,
                 children: const [
                   _HighlightCard(
                     asset: 'assets/workout_summary.png',
@@ -133,10 +140,9 @@ class _SectionHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         IconButton(icon: const Icon(Icons.chevron_right), onPressed: onTap),
       ],
@@ -188,26 +194,26 @@ class _HighlightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 12),
+      padding: AppPaddings.onlyLeft12,
       child: SizedBox(
         width: 180,
         child: Card(
           elevation: 2,
           clipBehavior: Clip.hardEdge,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(child: Image.asset(asset, fit: BoxFit.cover)),
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: AppPaddings.all12,
                 child: Text(
                   title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
