@@ -54,7 +54,7 @@ class _BmiPageState extends State<BmiPage> {
           children: [
             Center(
               child: Image.asset(
-                'assets/bmi_logo.png',
+                'assets/bmi.png',
                 width: 100,
               ),
             ),
