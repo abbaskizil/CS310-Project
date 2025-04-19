@@ -1,4 +1,5 @@
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
 import 'activity_entry_page.dart';
 
@@ -75,7 +76,7 @@ class _PagecalendarState extends State<Pagecalendar> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('AthleTech', style: TextStyle(color: Colors.black)),
+        title: Text('AthleTech', style: kAppBarTitleTextStyle),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -88,10 +89,10 @@ class _PagecalendarState extends State<Pagecalendar> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
                   'March 2025 ▼',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: kButtonLightTextStyle,
                 ),
                 SizedBox(width: 10),
               ],
@@ -118,9 +119,9 @@ class _PagecalendarState extends State<Pagecalendar> {
             ),
 
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Weekly View',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: kButtonLightTextStyle,
             ),
             const SizedBox(height: 10),
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'bmi_page.dart';
 import 'activity_entry_page.dart';
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -32,9 +33,7 @@ class HomePage extends StatelessWidget {
                   Center(
                     child: Text(
                       'AtheleTech',
-                      style: textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: kButtonLightTextStyle,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -119,7 +118,7 @@ class _ActionChip extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: () {},
       icon: Icon(icon, size: 20),
-      label: Text(label),
+      label: Text(label, style: kButtonLightTextStyle,),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -140,9 +139,7 @@ class _SectionHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          style: kButtonLightTextStyle,
         ),
         IconButton(icon: const Icon(Icons.chevron_right), onPressed: onTap),
       ],
@@ -178,7 +175,7 @@ class _ToolIcon extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: kButtonLightTextStyle,
           ),
         ],
       ),
@@ -211,9 +208,7 @@ class _HighlightCard extends StatelessWidget {
                 padding: AppPaddings.all12,
                 child: Text(
                   title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  style: kButtonLightTextStyle,
                 ),
               ),
             ],

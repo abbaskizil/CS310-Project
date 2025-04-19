@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 
 
-class AthleTechApp extends StatelessWidget {
-  const AthleTechApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AthleTech Coach',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+Widget build(BuildContext context) {
+  return MaterialApp(
+    title: 'AthleTech Coach',
+    theme: ThemeData(
+      primarySwatch: Colors.blue,
+      scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          textStyle: kAppBarTitleTextStyle,
+        ),
       ),
-      home: const ChatScreen(),
-    );
-  }
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          textStyle: kAppBarTitleTextStyle,
+        ),
+      ),
+    ),
+    home: const ChatScreen(),
+  );
 }
 
 class ChatScreen extends StatefulWidget {
@@ -208,6 +214,7 @@ class ChatMessage extends StatelessWidget {
               text,
               style: TextStyle(
                 color: isUser ? Colors.white : Colors.black,
+                
               ),
             ),
           ),

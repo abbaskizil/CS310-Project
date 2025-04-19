@@ -2,6 +2,7 @@ import 'package:athletech/screens/settings.dart';
 import 'package:flutter/material.dart';
 
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/styles.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -36,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('Profile', style: kAppBarTitleTextStyle),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -69,13 +70,13 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Expanded(
                   child: ListTile(
-                    title: const Text('Name'),
+                    title: Text('Name', style: kButtonLightTextStyle),
                     subtitle: Text(_name),
                   ),
                 ),
                 Expanded(
                   child: ListTile(
-                    title: const Text('Surname'),
+                    title: Text('Surname', style: kButtonLightTextStyle),
                     subtitle: Text(_surname),
                   ),
                 ),
@@ -87,13 +88,13 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Expanded(
                   child: ListTile(
-                    title: const Text('Weight (kg)'),
+                    title: Text('Weight (kg)', style: kButtonLightTextStyle),
                     subtitle: Text(_weight.toString()),
                   ),
                 ),
                 Expanded(
                   child: ListTile(
-                    title: const Text('Height'),
+                    title: Text('Height', style: kButtonLightTextStyle),
                     subtitle: Text(_height.toString()),
                   ),
                 ),
@@ -104,25 +105,28 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Expanded(
                   child: ListTile(
-                    title: const Text('Age'),
+                    title: Text('Age', style: kButtonLightTextStyle),
                     subtitle: Text(_age.toString()),
                   ),
                 ),
                 Expanded(
                   child: ListTile(
-                    title: const Text('Gender'),
+                    title: Text('Gender', style: kButtonLightTextStyle),
                     subtitle: Text(_gender.toString()),
                   ),
                 ),
               ],
             ),
 
-            ListTile(title: const Text('Email'), subtitle: Text(_email)),
+            ListTile(
+              title: Text('Email', style: kButtonLightTextStyle),
+              subtitle: Text(_email),
+            ),
 
             const SizedBox(height: 16),
 
             // Stats
-            Text('Your Stats', style: Theme.of(context).textTheme.titleLarge),
+            Text('Your Stats', style: kButtonLightTextStyle),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ElevatedButton.icon(
               onPressed: _editProfile,
               icon: const Icon(Icons.edit),
-              label: const Text('Edit Profile'),
+              label: Text('Edit Profile', style: kButtonLightTextStyle),
             ),
           ],
         ),
@@ -154,12 +158,9 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: AppPaddings.all16,
         child: Column(
           children: [
-            Text(
-              value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(title),
+            Text(value, style: kButtonLightTextStyle),
+            SizedBox(height: 4),
+            Text(title, style: kButtonLightTextStyle),
           ],
         ),
       ),
@@ -179,7 +180,7 @@ class EditProfilePage extends StatelessWidget {
         elevation: 0,
         foregroundColor: Colors.black,
         centerTitle: true,
-        title: const Text('Edit Profile'),
+        title: Text('Edit Profile', style: kButtonLightTextStyle),
       ),
       body: SingleChildScrollView(
         padding: AppPaddings.onlyLeft12,
@@ -211,13 +212,16 @@ class EditProfilePage extends StatelessWidget {
                   vertical: 12,
                 ),
               ),
-              child: const Text('Save Changes'),
+              child: Text(
+                'Save Changes',
+                style: kButtonLightTextStyle.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Member since 21/03/2025',
-              style: TextStyle(color: Colors.grey),
-            ),
+            Text('Member since 21/03/2025', style: kButtonLightTextStyle),
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
@@ -259,7 +263,13 @@ class EditProfilePage extends StatelessWidget {
                   vertical: 12,
                 ),
               ),
-              child: const Text('Discard Changes'),
+              child: Text(
+                'Discard Changes',
+                style: kButtonLightTextStyle.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
             const SizedBox(height: 30),
           ],
@@ -298,25 +308,14 @@ class ProfileItem extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Text(
-                        label,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(value, style: const TextStyle(color: Colors.grey)),
+                    Expanded(child: Text(label, style: kButtonLightTextStyle)),
+                    Text(value, style: kButtonLightTextStyle),
                     if (trailing != null) ...[
                       const SizedBox(width: 20),
                       Expanded(
-                        child: Text(
-                          trailing!,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        child: Text(trailing!, style: kButtonLightTextStyle),
                       ),
-                      Text(
-                        trailingValue ?? '',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
+                      Text(trailingValue ?? '', style: kButtonLightTextStyle),
                     ],
                   ],
                 ),
