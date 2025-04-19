@@ -133,18 +133,158 @@ class _ProfilePageState extends State<ProfilePage> {
 
 // TODO:: BURAYA EDIT PROFILE PAGESINI YAPISTIR ISMI AYNI KALSIN  <------------------------ AYDIN
 // YA DA YENI DOSYA ACACAKSAN BURAYI SIL.  
+
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Example minimal page
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
-      body: const Center(child: Text('Here you can edit your profile.')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
+        centerTitle: true,
+        title: const Text('Edit Profile'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 12.0),
+            child: Icon(Icons.settings),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: const [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.black12,
+                  child: Icon(Icons.person, size: 50, color: Colors.black),
+                ),
+                CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.add, size: 16, color: Colors.black),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+              ),
+              child: const Text('Save Changes'),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Member since 21/03/2025',
+              style: TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: const [
+                  ProfileItem(label: 'Name', value: 'sampleName'),
+                  ProfileItem(label: 'Surname', value: 'sampleSurname'),
+                  ProfileItem(label: 'Email', value: 'youremail@gmail.com'),
+                  ProfileItem(label: 'Height', value: '171', trailing: 'Weight', trailingValue: '62'),
+                  ProfileItem(label: 'Age', value: '21', trailing: 'Gender', trailingValue: 'Male'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+              ),
+              child: const Text('Discard Changes'),
+            ),
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
     );
   }
 }
+
+class ProfileItem extends StatelessWidget {
+  final String label;
+  final String value;
+  final String? trailing;
+  final String? trailingValue;
+
+  const ProfileItem({
+    super.key,
+    required this.label,
+    required this.value,
+    this.trailing,
+    this.trailingValue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Icon(Icons.edit, size: 18),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        label,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(value, style: const TextStyle(color: Colors.grey)),
+                    if (trailing != null) ...[
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Text(
+                          trailing!,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Text(trailingValue ?? '', style: const TextStyle(color: Colors.grey)),
+                    ]
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Divider(height: 1),
+      ],
+    );
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////
 
 
