@@ -1,4 +1,4 @@
-import 'package:athletech/screens/register_page.dart';
+import 'register_page.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigator.dart';
 
