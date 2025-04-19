@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'sign_in_page.dart';
 
-void main() {
-  runApp(const AthleTechApp());
-}
 
 class AthleTechApp extends StatelessWidget {
   const AthleTechApp({super.key});

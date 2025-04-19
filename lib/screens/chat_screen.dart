@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const AthleTechApp());
+
 
 class AthleTechApp extends StatelessWidget {
   const AthleTechApp({super.key});

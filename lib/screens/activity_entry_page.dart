@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'calendar_day.dart';
 import 'package:intl/intl.dart';
 
-void main() => runApp(ActivityEntryApp());
 
 class ActivityEntryApp extends StatelessWidget {
   const ActivityEntryApp({super.key});

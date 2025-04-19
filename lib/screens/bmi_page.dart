@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: BmiPage(),
-  ));
-}
+
 
 class BmiPage extends StatefulWidget {
   const BmiPage({super.key});

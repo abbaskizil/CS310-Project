@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'calendar_page.dart';
 import 'bmi_page.dart';
-// import 'activity_entry_page.dart';
+import 'activity_entry_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -67,8 +67,8 @@ class HomePage extends StatelessWidget {
                       tool(CupertinoIcons.calendar, 'Calendar', const CalendarPage()),
                       tool(Icons.monitor_weight_outlined, 'BMI', const BmiPage()),
                       tool(Icons.local_fire_department, 'Calorie tracker', const CalorieTracker()),
-                      // _tool(CupertinoIcons.chart_pie, 'Activity Entry',
-                      //     const ActivityEntryPage()),
+                      tool(CupertinoIcons.chart_pie, 'Activity Entry',
+                      const ActivityEntryPage()),
                     ],
                   ),
                   const SizedBox(height: 32),
