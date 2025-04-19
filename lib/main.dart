@@ -1,3 +1,4 @@
+import 'package:athletech/screens/calorie_tracker.dart';
 import 'package:flutter/material.dart';
 import 'screens/SplashScreen.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const SplashScreen(),
+      home: const SplashScreen(), 
     );
   }
 }

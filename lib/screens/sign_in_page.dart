@@ -2,7 +2,6 @@ import 'register_page.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigator.dart';
 
-
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
@@ -25,22 +24,36 @@ class _SignInPageState extends State<SignInPage> {
         _isLoading = true;
       });
 
-      // TODO: for phase2 
-      // since we don't have a database now, delay only
+      // TODO: Integrate with backend when available
       await Future.delayed(const Duration(seconds: 2));
 
       setState(() {
         _isLoading = false;
       });
 
-      // TODO:: Navigate to home/profile page after successful login
-
-
-
+      // Navigate to home/profile page after successful login
       Navigator.pushReplacement(
         context,
-        // sends user to home page with bottom navigation bar
-        MaterialPageRoute(builder: (context) => BottomNavigator()) 
+        MaterialPageRoute(
+          builder: (context) => BottomNavigator(),
+        ),
+      );
+    } else {
+      // Show alert dialog if the form is invalid
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Invalid Form'),
+            content: const Text('Please correct the errors in the form before submitting.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
       );
     }
   }
@@ -55,8 +68,10 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // You can style the AppBar or remove it entirely
-      appBar: AppBar(title: const Text('Welcome Back!'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Welcome Back!'),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Form(
@@ -76,7 +91,11 @@ class _SignInPageState extends State<SignInPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  // TODO:: add proper validation for future reference 
+                  // Basic email pattern validation
+                  final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                  if (!emailRegex.hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
                   return null;
                 },
               ),
@@ -95,26 +114,29 @@ class _SignInPageState extends State<SignInPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
                   }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
                   return null;
                 },
               ),
               const SizedBox(height: 8),
 
-              // Forgot Password does nothing at the moment 
+              // Forgot Password button
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Center(child: Text("dummy button")),
-                            actions: [],
-                          );
-                        },
-                      );
-                    },
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Center(child: Text("Forgot Password")),
+                          content: Text('This feature is coming soon.'),
+                        );
+                      },
+                    );
+                  },
                   child: const Text('Forgot your password?'),
                 ),
               ),
@@ -125,16 +147,14 @@ class _SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _signIn,
-                  child:
-                      _isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text('Sign In'),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text('Sign In'),
                 ),
               ),
               const SizedBox(height: 16),
 
               // Terms of Service & Privacy Policy
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -144,7 +164,7 @@ class _SignInPageState extends State<SignInPage> {
                         context: context,
                         builder: (context) {
                           return const AlertDialog(
-                            title: Center(child: Text("terms of service")),
+                            title: Center(child: Text("Terms of Service")),
                           );
                         },
                       );
@@ -158,7 +178,7 @@ class _SignInPageState extends State<SignInPage> {
                         context: context,
                         builder: (context) {
                           return const AlertDialog(
-                            title: Center(child: Text("privacy policy")),
+                            title: Center(child: Text("Privacy Policy")),
                           );
                         },
                       );
@@ -170,7 +190,7 @@ class _SignInPageState extends State<SignInPage> {
 
               const SizedBox(height: 10),
 
-
+              // Register Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

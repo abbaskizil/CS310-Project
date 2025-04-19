@@ -1,3 +1,4 @@
+import 'package:athletech/screens/settings.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -12,6 +13,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final String _name = 'John';
   final String _surname = 'Doe';
   final String _email = 'john.doe@example.com';
+  final String _gender = "Male";
   final double _height = 180.0;
   final double _weight = 75.0;
   final int _age = 28;
@@ -22,7 +24,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final int _distanceRan = 153; // example distance or steps
 
   void _editProfile() {
-    // TODO:: HERE WE NEED TO CHANGE THE ROUTE TO THE EDITPAGE WHEN ADDED
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const EditProfilePage()),
@@ -32,7 +33,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsScreen()),
+              );
+            },
+          ),
+        ],
+      ),
       // bottomNavigationBar: null, // <-------------------
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -75,12 +91,30 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 Expanded(
                   child: ListTile(
-                    title: const Text('Age'),
-                    subtitle: Text(_age.toString()),
+                    title: const Text('Height'),
+                    subtitle: Text(_height.toString()),
                   ),
                 ),
               ],
             ),
+
+            Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    title: const Text('Age'),
+                    subtitle: Text(_age.toString()),
+                  ),
+                ),
+                Expanded(
+                  child: ListTile(
+                    title: const Text('Gender'),
+                    subtitle: Text(_gender.toString()),
+                  ),
+                ),
+              ],
+            ),
+
             ListTile(title: const Text('Email'), subtitle: Text(_email)),
 
             const SizedBox(height: 16),
@@ -131,9 +165,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-// TODO:: BURAYA EDIT PROFILE PAGESINI YAPISTIR ISMI AYNI KALSIN  <------------------------ AYDIN
-// YA DA YENI DOSYA ACACAKSAN BURAYI SIL.  
-
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
 
@@ -147,18 +178,6 @@ class EditProfilePage extends StatelessWidget {
         foregroundColor: Colors.black,
         centerTitle: true,
         title: const Text('Edit Profile'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 12.0),
-            child: Icon(Icons.settings),
-          )
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -185,7 +204,10 @@ class EditProfilePage extends StatelessWidget {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 12,
+                ),
               ),
               child: const Text('Save Changes'),
             ),
@@ -200,22 +222,40 @@ class EditProfilePage extends StatelessWidget {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
-                children: const [
-                  ProfileItem(label: 'Name', value: 'sampleName'),
-                  ProfileItem(label: 'Surname', value: 'sampleSurname'),
-                  ProfileItem(label: 'Email', value: 'youremail@gmail.com'),
-                  ProfileItem(label: 'Height', value: '171', trailing: 'Weight', trailingValue: '62'),
-                  ProfileItem(label: 'Age', value: '21', trailing: 'Gender', trailingValue: 'Male'),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: const [
+                    ProfileItem(label: 'Name', value: 'sampleName'),
+                    ProfileItem(label: 'Surname', value: 'sampleSurname'),
+                    ProfileItem(label: 'Email', value: 'youremail@gmail.com'),
+                    ProfileItem(
+                      label: 'Height',
+                      value: '171',
+                      trailing: 'Weight',
+                      trailingValue: '62',
+                    ),
+                    ProfileItem(
+                      label: 'Age',
+                      value: '21',
+                      trailing: 'Gender',
+                      trailingValue: 'Male',
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 12,
+                ),
               ),
               child: const Text('Discard Changes'),
             ),
@@ -271,21 +311,18 @@ class ProfileItem extends StatelessWidget {
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(trailingValue ?? '', style: const TextStyle(color: Colors.grey)),
-                    ]
+                      Text(
+                        trailingValue ?? '',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
                   ],
                 ),
               ),
             ),
           ],
         ),
-        const Divider(height: 1),
       ],
     );
   }
 }
-
-///////////////////////////////////////////////////////////////////////
-
-
-

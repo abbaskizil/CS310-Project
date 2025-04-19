@@ -1,9 +1,10 @@
+import 'package:athletech/screens/calorie_tracker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'calendar_page.dart';
 import 'bmi_page.dart';
-import 'activity_entry_page.dart';
+// import 'activity_entry_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -65,8 +66,9 @@ class HomePage extends StatelessWidget {
                     children: [
                       _tool(CupertinoIcons.calendar, 'Calendar', const CalendarPage()),
                       _tool(Icons.monitor_weight_outlined, 'BMI', const BmiPage()),
-                      _tool(CupertinoIcons.chart_pie, 'Activity\nEntry',
-                          const ActivityEntryPage()),
+                      _tool(Icons.local_fire_department, 'Calorie tracker', const CalorieTracker()),
+                      // _tool(CupertinoIcons.chart_pie, 'Activity Entry',
+                      //     const ActivityEntryPage()),
                     ],
                   ),
                   const SizedBox(height: 32),
