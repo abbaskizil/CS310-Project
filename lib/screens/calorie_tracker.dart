@@ -1,5 +1,6 @@
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 import 'package:flutter/material.dart';
 
 class CalorieEntry {
@@ -52,6 +53,7 @@ class _CalorieTrackerState extends State<CalorieTracker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.appBarColor,
         title: Text('Calorie Tracker', style: kAppBarTitleTextStyle,),
         centerTitle: true,
       ),

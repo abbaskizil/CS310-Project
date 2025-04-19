@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -37,6 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.appBarColor,
         title: Text('Profile', style: kAppBarTitleTextStyle),
         centerTitle: true,
         actions: <Widget>[

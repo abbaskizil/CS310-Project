@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'bottom_navigator.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
+import 'package:athletech/utilities/colors.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -78,6 +79,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.appBarColor,
         title: Text('Welcome Back!',
         style: kAppBarTitleTextStyle,),
         centerTitle: true,

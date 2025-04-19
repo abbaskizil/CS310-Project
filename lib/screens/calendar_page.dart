@@ -2,6 +2,7 @@ import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:athletech/utilities/padding.dart';
+import 'package:athletech/utilities/colors.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -14,7 +15,7 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
-  TimeOfDay _endTime   = const TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 8, minute: 0);
 
   Future<void> _pickTime({required bool isStart}) async {
     final picked = await showTimePicker(
@@ -35,7 +36,9 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Calendar', style: kAppBarTitleTextStyle,)),
+      appBar: AppBar(title: Text('Calendar', style: kAppBarTitleTextStyle),
+      backgroundColor: AppColors.appBarColor),
+      
       body: Padding(
         padding: AppPaddings.all16,
         child: Column(
@@ -50,7 +53,7 @@ class _CalendarPageState extends State<CalendarPage> {
               onDaySelected: (selected, focused) {
                 setState(() {
                   _selectedDay = selected;
-                  _focusedDay  = focused;
+                  _focusedDay = focused;
                 });
               },
               headerStyle: const HeaderStyle(
@@ -84,9 +87,10 @@ class _CalendarPageState extends State<CalendarPage> {
             const SizedBox(height: 12),
             _TimeField(
               label: 'Date',
-              time: _selectedDay != null
-                  ? '${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}'
-                  : 'Not selected',
+              time:
+                  _selectedDay != null
+                      ? '${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}'
+                      : 'Not selected',
               onTap: () {}, // read‑only
             ),
           ],
@@ -126,10 +130,7 @@ class _TimeField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey.shade300),
               ),
-              child: Text(
-                time,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+              child: Text(time, style: Theme.of(context).textTheme.bodyLarge),
             ),
           ),
         ),

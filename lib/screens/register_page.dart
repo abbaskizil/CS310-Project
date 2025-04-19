@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
-
+import 'package:athletech/utilities/colors.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -36,16 +36,19 @@ class _RegisterPageState extends State<RegisterPage> {
       // Show alert if form invalid
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Invalid Form'),
-          content: const Text('Please correct the errors before proceeding.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+        builder:
+            (context) => AlertDialog(
+              title: const Text('Invalid Form'),
+              content: const Text(
+                'Please correct the errors before proceeding.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     }
   }
@@ -64,11 +67,8 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title:  Text(
-          'Register',
-          style: kAppBarTitleTextStyle,
-        ),
+        backgroundColor: AppColors.appBarColor,
+        title: Text('Register', style: kAppBarTitleTextStyle),
         iconTheme: const IconThemeData(color: Colors.black),
         centerTitle: true,
         elevation: 0,
@@ -107,8 +107,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                validator: (value) =>
-                    (value == null || value.trim().isEmpty) ? 'Please enter your full name' : null,
+                validator:
+                    (value) =>
+                        (value == null || value.trim().isEmpty)
+                            ? 'Please enter your full name'
+                            : null,
               ),
               const SizedBox(height: 20),
 
@@ -196,14 +199,23 @@ class _RegisterPageState extends State<RegisterPage> {
                     onPressed: _isLoading ? null : _register,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 15,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Register', style: TextStyle(fontSize: 18)),
+                    child:
+                        _isLoading
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                            : const Text(
+                              'Register',
+                              style: TextStyle(fontSize: 18),
+                            ),
                   ),
                 ),
               ),
