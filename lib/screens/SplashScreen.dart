@@ -1,8 +1,11 @@
+import 'package:athletech/utilities/styles.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'sign_in_page.dart';
-import 'package:athletech/utilities/padding.dart';
-import 'package:athletech/utilities/styles.dart';
+
+void main() {
+  runApp(const AthleTechApp());
+}
 
 class AthleTechApp extends StatelessWidget {
   const AthleTechApp({super.key});
@@ -40,24 +43,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF0A1B20),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/AthleTech_logo.png',
-              width: 150,
-            ),
+            Image.asset('assets/AthleTech_logo.png', width: 150),
             const SizedBox(height: 20),
-             Text(
+            Text(
               'AthleTech',
-              style: kAppBarTitleTextStyle,
+              style: kButtonLightTextStyle.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'Your Fitness Journey Companion',
-              style: kButtonDarkTextStyle,
+              style: TextStyle(fontSize: 16, color: Colors.blueGrey),
             ),
             const SizedBox(height: 30),
             Row(
@@ -69,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 SizedBox(width: 10),
                 ModeButton(text: 'TRACK'),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -84,16 +84,12 @@ class ModeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: AppPaddings.horizontal16Vertical8,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.blueGrey[800],
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        text,
-        style: kAppBarTitleTextStyle,
-      ),
+      child: Text(text, style: kButtonLightTextStyle),
     );
   }
 }
-

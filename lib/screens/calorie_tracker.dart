@@ -51,63 +51,82 @@ class _CalorieTrackerState extends State<CalorieTracker> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.appBarColor,
-        title: Text('Calorie Tracker', style: kAppBarTitleTextStyle,),
-        centerTitle: true,
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
       ),
-      body: Padding(
-        padding: AppPaddings.all16,
-        child: Column(
-          children: [
-            // Input fields for new entry
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Food Name',
-                border: OutlineInputBorder(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.appBarColor,
+          title: Text('Calorie Tracker', style: kAppBarTitleTextStyle),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: AppPaddings.all16,
+          child: Column(
+            children: [
+              // Input fields for new entry
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Food Name',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _calorieController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Calories',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _calorieController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Calories',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: _addEntry,
-              child: Text('Add Entry', style: kButtonLightTextStyle,),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.buttonColor,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 12,
+                  ),
+                ),
+                onPressed: _addEntry,
+                child: Text('Add Entry', style: kButtonLightTextStyle),
+              ),
+              const SizedBox(height: 16),
 
-            // List of calorie entries
-            Expanded(
-              child: _entries.isEmpty
-                  ? Center(child: Text('No entries yet.', style: kButtonLightTextStyle,))
-                  : ListView.builder(
-                      itemCount: _entries.length,
-                      itemBuilder: (context, index) {
-                        final entry = _entries[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          child: ListTile(
-                            title: Text(entry.name),
-                            subtitle: Text('${entry.calories} kcal'),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () => _removeEntry(index),
-                            ),
+              // List of calorie entries
+              Expanded(
+                child:
+                    _entries.isEmpty
+                        ? Center(
+                          child: Text(
+                            'No entries yet.',
+                            style: kButtonLightTextStyle,
                           ),
-                        );
-                      },
-                    ),
-            ),
-          ],
+                        )
+                        : ListView.builder(
+                          itemCount: _entries.length,
+                          itemBuilder: (context, index) {
+                            final entry = _entries[index];
+                            return Card(
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              child: ListTile(
+                                title: Text(entry.name),
+                                subtitle: Text('${entry.calories} kcal'),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => _removeEntry(index),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+              ),
+            ],
+          ),
         ),
       ),
     );

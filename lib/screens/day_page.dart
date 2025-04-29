@@ -2,7 +2,6 @@ import 'package:athletech/utilities/padding.dart';
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
-import 'activity_entry_page.dart';
 
 class Pagecalendar extends StatefulWidget {
   const Pagecalendar({super.key});
@@ -14,7 +13,6 @@ class Pagecalendar extends StatefulWidget {
 class _PagecalendarState extends State<Pagecalendar> {
   String selectedDay = '21'; // Default selected
 
-  // Günlük adım ve kalori bilgileri
   final Map<String, Map<String, String>> statsPerDay = {
     '18': {'steps': '6,542', 'calories': '310'},
     '19': {'steps': '7,110', 'calories': '345'},
@@ -25,7 +23,6 @@ class _PagecalendarState extends State<Pagecalendar> {
     '24': {'steps': '9,200', 'calories': '450'},
   };
 
-  // Günlük aktiviteler
   Map<String, List<Map<String, dynamic>>> activities = {
     '21': [
       {
@@ -74,102 +71,101 @@ class _PagecalendarState extends State<Pagecalendar> {
     final currentStats =
         statsPerDay[selectedDay] ?? {'steps': '0', 'calories': '0'};
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('AthleTech', style: kAppBarTitleTextStyle),
-        centerTitle: true,
-        backgroundColor: AppColors.appBarColor,
-        elevation: 0,
-        foregroundColor: Colors.black,
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
       ),
-      body: Padding(
-        padding: AppPaddings.all16,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'March 2025 ▼',
-                  style: kButtonLightTextStyle,
-                ),
-                SizedBox(width: 10),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // Günler
-            SizedBox(
-              height: 60,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children:
-                    dayList.map((d) {
-                      return GestureDetector(
-                        onTap: () => setState(() => selectedDay = d['day']!),
-                        child: _dayColumn(
-                          d['day']!,
-                          d['label']!,
-                          selectedDay == d['day'],
-                        ),
-                      );
-                    }).toList(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-            Text(
-              'Weekly View',
-              style: kButtonLightTextStyle,
-            ),
-            const SizedBox(height: 10),
-
-            Row(
-              children: [
-                _summaryBox('Daily Steps', currentStats['steps']!),
-                const SizedBox(width: 10),
-                _summaryBox('Calories', currentStats['calories']!),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            Row(
-              children: [
-                const Icon(Icons.check_box_outline_blank),
-                const SizedBox(width: 10),
-                Text(
-                  '$selectedDay March',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Padding(
-              padding: AppPaddings.onlyLeft12,
-              child: Text(
-                '${activities[selectedDay]?.length ?? 0} activities scheduled',
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Aktiviteler
-            ...?activities[selectedDay]?.map((activity) {
-              return Column(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('AthleTech', style: kAppBarTitleTextStyle),
+          centerTitle: true,
+          backgroundColor: AppColors.appBarColor,
+          elevation: 0,
+          foregroundColor: Colors.black,
+        ),
+        body: Padding(
+          padding: AppPaddings.all16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _activityItem(
-                    color: activity['color'],
-                    title: activity['title'],
-                    subtitle: activity['subtitle'],
-                  ),
-                  const SizedBox(height: 10),
+                  Text('March 2025 ▼', style: kButtonLightTextStyle),
+                  SizedBox(width: 10),
                 ],
-              );
-            }).toList(),
-          ],
+              ),
+              const SizedBox(height: 10),
+
+              // Günler
+              SizedBox(
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children:
+                      dayList.map((d) {
+                        return GestureDetector(
+                          onTap: () => setState(() => selectedDay = d['day']!),
+                          child: _dayColumn(
+                            d['day']!,
+                            d['label']!,
+                            selectedDay == d['day'],
+                          ),
+                        );
+                      }).toList(),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+              Text('Weekly View', style: kButtonLightTextStyle),
+              const SizedBox(height: 10),
+
+              Row(
+                children: [
+                  _summaryBox('Daily Steps', currentStats['steps']!),
+                  const SizedBox(width: 10),
+                  _summaryBox('Calories', currentStats['calories']!),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              Row(
+                children: [
+                  const Icon(Icons.check_box_outline_blank),
+                  const SizedBox(width: 10),
+                  Text(
+                    '$selectedDay March',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: AppPaddings.onlyLeft12,
+                child: Text(
+                  '${activities[selectedDay]?.length ?? 0} activities scheduled',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Aktiviteler
+              ...?activities[selectedDay]?.map((activity) {
+                return Column(
+                  children: [
+                    _activityItem(
+                      color: activity['color'],
+                      title: activity['title'],
+                      subtitle: activity['subtitle'],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                );
+              }).toList(),
+            ],
+          ),
         ),
       ),
     );
