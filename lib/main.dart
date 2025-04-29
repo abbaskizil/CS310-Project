@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/activity_entry_page.dart';
 import 'screens/bmi_page.dart';
 import 'screens/bottom_navigator.dart';
-import 'screens/calendar_day.dart';
+import 'screens/day_page.dart';
 import 'screens/calendar_page.dart';
 import 'package:athletech/screens/calorie_tracker.dart';
 import 'screens/chat_screen.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/SplashScreen',
       routes: {
-        '/activity_entry': (context) => ActivityEntryApp(),
+        '/activity_entry': (context) => ActivityEntryPage(),
         '/bmi': (context) => BmiPage(),
         '/bottom_navigator': (context) => BottomNavigator(),
         '/day': (context) => Pagecalendar(),

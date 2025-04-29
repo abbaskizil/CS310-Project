@@ -3,22 +3,17 @@ import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
 
-
 Widget build(BuildContext context) {
   return MaterialApp(
     title: 'AthleTech Coach',
     theme: ThemeData(
-      primarySwatch: Colors.blue,
+      // primarySwatch: Colors.blue,
       scaffoldBackgroundColor: const Color(0xFFF5F5F5),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          textStyle: kAppBarTitleTextStyle,
-        ),
+        style: TextButton.styleFrom(textStyle: kAppBarTitleTextStyle),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          textStyle: kAppBarTitleTextStyle,
-        ),
+        style: ElevatedButton.styleFrom(textStyle: kAppBarTitleTextStyle),
       ),
     ),
     home: const ChatScreen(),
@@ -101,36 +96,44 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.appBarColor,
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/coach.png'),
-              radius: 20,
-            ),
-            const SizedBox(width: 12),
-            const Text('AthleTech Coach'),
-          ],
-        ),
-        centerTitle: true,
-        elevation: 0,
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: AppPaddings.all12,
-              reverse: true, // Helps with keyboard appearance
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return _messages.reversed.toList()[index];
-              },
-            ),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.appBarColor,
+          title: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/coach.png'),
+                radius: 20,
+              ),
+              const SizedBox(width: 12),
+              const Text('AthleTech Coach'),
+            ],
           ),
-          _buildMessageInput(),
-        ],
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: Container(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: AppPaddings.all12,
+                  reverse: true, // Helps with keyboard appearance
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    return _messages.reversed.toList()[index];
+                  },
+                ),
+              ),
+              _buildMessageInput(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -144,8 +147,8 @@ class _ChatScreenState extends State<ChatScreen> {
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, -1),
+            blurRadius: 4,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -164,7 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.send, color: Colors.blue),
+            icon: const Icon(Icons.send, color: AppColors.send),
             onPressed: _sendMessage,
           ),
         ],
@@ -196,7 +199,7 @@ class ChatMessage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
-              color: isUser ? Colors.blue : Colors.white,
+              color: isUser ? AppColors.send : Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(12.0),
                 topRight: const Radius.circular(12.0),
@@ -206,28 +209,22 @@ class ChatMessage extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                  offset: const Offset(0, 1),
+                  spreadRadius: 2,
+                  blurRadius: 4,
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
             child: Text(
               text,
-              style: TextStyle(
-                color: isUser ? Colors.white : Colors.black,
-                
-              ),
+              style: TextStyle(color: isUser ? Colors.white : Colors.black),
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
               time,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12.0,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
           ),
         ],

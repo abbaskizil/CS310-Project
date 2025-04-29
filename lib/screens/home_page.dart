@@ -1,108 +1,120 @@
-import 'package:athletech/screens/calorie_tracker.dart';
+import 'package:athletech/utilities/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'bmi_page.dart';
-import 'activity_entry_page.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
-
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     // A local helper to simplify icon → route mapping.
     Widget tool(IconData icon, String label, String dest) => _ToolIcon(
       icon: icon,
       label: label,
       onTap: () => Navigator.pushNamed(context, dest),
     );
-
-    return SafeArea(
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      'AtheleTech',
-                      style: kButtonLightTextStyle,
-                    ),
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("AtheleTech", style: kAppBarTitleTextStyle),
+          backgroundColor: AppColors.appBarColor,
+        ),
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      _ActionChip(
-                        icon: Icons.favorite_border,
-                        label: 'Favorites',
-                      ),
-                      _ActionChip(icon: Icons.history, label: 'History'),
-                      _ActionChip(icon: Icons.smart_toy_outlined, label: 'AI'),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      'assets/banner.png',
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  _SectionHeader(title: 'Tools', onTap: () {}),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      tool(Icons.monitor_weight_outlined, 'BMI', '/bmi'),
-                      tool(
-                        Icons.local_fire_department,
-                        'Calorie tracker',
-                        '/CalorieTracker',
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          _ActionChip(
+                            icon: Icons.favorite_border,
+                            label: 'Favorites',
+                          ),
+                          _ActionChip(icon: Icons.history, label: 'History'),
+                          _ActionChip(
+                            icon: Icons.smart_toy_outlined,
+                            label: 'AI',
+                          ),
+                        ],
                       ),
-                      tool(
-                        CupertinoIcons.chart_pie,
-                        'Activity Entry',
-                        '/activity_entry',
+                      const SizedBox(height: 16),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          'assets/banner.png',
+                          height: 180,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      _SectionHeader(title: 'Tools', onTap: () {}),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: AppPaddings.horizontal20Vertical12,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            tool(
+                              Icons.monitor_weight_outlined,
+                              'BMI\n',
+                              '/bmi',
+                            ),
+                            tool(
+                              Icons.local_fire_department,
+                              'Calorie\ntracker',
+                              '/CalorieTracker',
+                            ),
+                            tool(
+                              CupertinoIcons.chart_pie,
+                              'Activity\nEntry',
+                              '/activity_entry',
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      _SectionHeader(title: "Today's Highlights", onTap: () {}),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 220,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: AppPaddings.all12,
+                    children: const [
+                      _HighlightCard(
+                        asset: 'assets/workout_summary.png',
+                        title: 'Workout Summary\nCard',
+                      ),
+                      _HighlightCard(
+                        asset: 'assets/achievements.png',
+                        title: 'Achievements',
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
-                  _SectionHeader(title: "Today's Highlights", onTap: () {}),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 220,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: AppPaddings.all12,
-                children: const [
-                  _HighlightCard(
-                    asset: 'assets/workout_summary.png',
-                    title: 'Workout Summary\nCard',
-                  ),
-                  _HighlightCard(
-                    asset: 'assets/achievements.png',
-                    title: 'Achievements',
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -118,7 +130,7 @@ class _ActionChip extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: () {},
       icon: Icon(icon, size: 20),
-      label: Text(label, style: kButtonLightTextStyle,),
+      label: Text(label, style: kButtonLightTextStyle),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -137,10 +149,7 @@ class _SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: kButtonLightTextStyle,
-        ),
+        Text(title, style: kButtonLightTextStyle),
         IconButton(icon: const Icon(Icons.chevron_right), onPressed: onTap),
       ],
     );
@@ -152,12 +161,14 @@ class _ToolIcon extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.backgroundColor = AppColors.buttonColor, 
     super.key,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +179,7 @@ class _ToolIcon extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: backgroundColor,
             child: Icon(icon, size: 32, color: Colors.black87),
           ),
           const SizedBox(height: 8),
@@ -206,10 +217,7 @@ class _HighlightCard extends StatelessWidget {
               Expanded(child: Image.asset(asset, fit: BoxFit.cover)),
               Padding(
                 padding: AppPaddings.all12,
-                child: Text(
-                  title,
-                  style: kButtonLightTextStyle,
-                ),
+                child: Text(title, style: kButtonLightTextStyle),
               ),
             ],
           ),

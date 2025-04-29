@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
 
@@ -8,413 +7,134 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: AppColors.appBarColor,
-        title: Text(
-          'Settings',
-          style: kAppBarTitleTextStyle,
-        ),
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
       ),
-
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/AccountPrivacy_image.png',
-                      width: 40,
-                      height: 40,
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        margin: EdgeInsets.only(left: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            bottomLeft: Radius.circular(40),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(width: 16),
-
-                            Text(
-                              '  Account Privacy',
-                              style: kButtonDarkTextStyle,
-                            ),
-
-                            Spacer(),
-
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => AccountPrivacyScreen(),
-                                  ),
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: Text(
-                                '>',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 16),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: AppColors.appBarColor,
+          title: Text('Settings', style: kAppBarTitleTextStyle),
+        ),
+        body: Container(
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildSettingItem(
+                context: context,
+                imagePath: 'assets/AccountPrivacy_image.png',
+                title: 'Account Privacy',
+                dialogMessage: 'Welcome to the Account Privacy Screen!',
               ),
-            ),
-
-            SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/ContactUs_image.png',
-                      width: 40,
-                      height: 40,
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        margin: EdgeInsets.only(left: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            bottomLeft: Radius.circular(40),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-
-                            Text(
-                              '  Contact Us',
-                              style: kButtonDarkTextStyle,
-                            ),
-
-                            const Spacer(),
-
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ContactUsScreen(),
-                                  ),
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: Text(
-                                '>',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 16),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              _buildSettingItem(
+                context: context,
+                imagePath: 'assets/ContactUs_image.png',
+                title: 'Contact Us',
+                dialogMessage:
+                    'You can reach out to us at support@example.com.',
               ),
-            ),
-
-            SizedBox(height: 20),
-
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/UserAgreement_image.png',
-                      width: 40,
-                      height: 40,
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        margin: EdgeInsets.only(left: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            bottomLeft: Radius.circular(40),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(width: 16),
-
-                            Text(
-                              '  User Agreement',
-                              style: kButtonDarkTextStyle,
-                            ),
-
-                            Spacer(),
-
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => UserAgreementScreen(),
-                                  ),
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: Text(
-                                '>',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 16),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              _buildSettingItem(
+                context: context,
+                imagePath: 'assets/UserAgreement_image.png',
+                title: 'User Agreement',
+                dialogMessage: 'Here is the User Agreement.',
               ),
-            ),
-
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/AccountSettings_image.png',
-                      width: 40,
-                      height: 40,
-                    ),
-
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        margin: const EdgeInsets.only(left: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(40),
-                            bottomLeft: Radius.circular(40),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-
-                            Text(
-                              '  Account Settings',
-                              style: kButtonDarkTextStyle,
-                            ),
-
-                            const Spacer(),
-
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => AccountSettingsScreen(),
-                                  ),
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                '>',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(width: 16),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              _buildSettingItem(
+                context: context,
+                imagePath: 'assets/AccountSettings_image.png',
+                title: 'Account Settings',
+                dialogMessage: 'Change your account settings here.',
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
-}
 
-class AccountPrivacyScreen extends StatelessWidget {
-  const AccountPrivacyScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Account Privacy Screen',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        centerTitle: true,
+  Widget _buildAlertDialog(
+    BuildContext context, {
+    required String title,
+    required String message,
+  }) {
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Welcome to the Account Privacy Screen!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-          ],
-        ),
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text(title, style: kAppBarTitleTextStyle),
+        content: Text(message, style: kButtonDarkTextStyle),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
-}
 
-class AccountSettingsScreen extends StatelessWidget {
-  const AccountSettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-
-      appBar: AppBar(
-        title: const Text(
-          'Account Settings Screen',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Welcome to the Account Settings Screen!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ContactUsScreen extends StatelessWidget {
-  const ContactUsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-
-      appBar: AppBar(
-        title: const Text(
-          'Contact Us Screen',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Welcome to the Contact Us Screen!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class UserAgreementScreen extends StatelessWidget {
-  const UserAgreementScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-
-      appBar: AppBar(
-        title: const Text(
-          'User Agreement Screen',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Welcome to the User Agreement Screen!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-          ],
+  Widget _buildSettingItem({
+    required BuildContext context,
+    required String imagePath,
+    required String title,
+    required String dialogMessage,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: InkWell(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(40),
+            bottomLeft: Radius.circular(40),
+          ),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder:
+                  (context) => _buildAlertDialog(
+                    context,
+                    title: title,
+                    message: dialogMessage,
+                  ),
+            );
+          },
+          child: Row(
+            children: [
+              Image.asset(imagePath, width: 40, height: 40),
+              Expanded(
+                child: Container(
+                  height: 50,
+                  margin: const EdgeInsets.only(left: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.buttonColor,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      bottomLeft: Radius.circular(40),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Text('  $title', style: kButtonDarkTextStyle),
+                      const Spacer(),
+                      const Text(
+                        '>',
+                        style: TextStyle(fontSize: 20, color: Colors.black),
+                      ),
+                      const SizedBox(width: 16),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

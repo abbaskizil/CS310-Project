@@ -64,162 +64,167 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.appBarColor,
-        title: Text('Register', style: kAppBarTitleTextStyle),
-        iconTheme: const IconThemeData(color: Colors.black),
-        centerTitle: true,
-        elevation: 0,
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
+        useMaterial3: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  'Welcome to AthleTech!',
-                  style: kButtonDarkTextStyle,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Center(
-                child: Text(
-                  'Your Fitness Journey Companion',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // Full Name
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  hintText: 'Enter your full name',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  contentPadding: AppPaddings.all16,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.appBarColor,
+          title: Text('Register', style: kAppBarTitleTextStyle),
+          iconTheme: const IconThemeData(color: Colors.black),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    'Welcome to AthleTech!',
+                    style: kButtonDarkTextStyle,
                   ),
                 ),
-                validator:
-                    (value) =>
-                        (value == null || value.trim().isEmpty)
-                            ? 'Please enter your full name'
-                            : null,
-              ),
-              const SizedBox(height: 20),
-
-              // Email
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  contentPadding: AppPaddings.all16,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    'Your Fitness Journey Companion',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                  if (!emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
-              // Password
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Enter password',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  contentPadding: AppPaddings.all16,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // Confirm Password
-              TextFormField(
-                controller: _confirmController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Confirm password',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  contentPadding: AppPaddings.all16,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your password';
-                  }
-                  if (value != _passwordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 30),
-
-              // Register Button
-              Center(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _register,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 50,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                // Full Name
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your full name',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: AppPaddings.all16,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    child:
-                        _isLoading
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : const Text(
-                              'Register',
-                              style: TextStyle(fontSize: 18),
-                            ),
+                  ),
+                  validator:
+                      (value) =>
+                          (value == null || value.trim().isEmpty)
+                              ? 'Please enter your full name'
+                              : null,
+                ),
+                const SizedBox(height: 20),
+
+                // Email
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your email',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: AppPaddings.all16,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+
+                // Password
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Enter password',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: AppPaddings.all16,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+
+                // Confirm Password
+                TextFormField(
+                  controller: _confirmController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Confirm password',
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: AppPaddings.all16,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
+
+                // Register Button
+                Center(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _register,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.buttonColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 15,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child:
+                          _isLoading
+                              ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                              : const Text(
+                                'Register',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

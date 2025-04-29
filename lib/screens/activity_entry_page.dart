@@ -2,9 +2,8 @@ import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
 import 'package:flutter/material.dart';
-import 'calendar_day.dart';
+import 'day_page.dart';
 import 'package:intl/intl.dart';
-
 
 class ActivityEntryApp extends StatelessWidget {
   const ActivityEntryApp({super.key});
@@ -14,7 +13,7 @@ class ActivityEntryApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
         useMaterial3: true,
       ),
       home: ActivityEntryPage(),
@@ -66,29 +65,21 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
     final dateString = DateFormat.yMMMM().format(selectedDate);
     final timeString = selectedTime.format(context);
     final workoutStyles = [
-      {
-        'label': 'Cycling',
-        'image': 'assets/cycling-image.jpeg' 
-      },
-      {
-        'label': 'Strength',
-        'image': 'assets/strength-image.jpeg' 
-      },
+      {'label': 'Cycling', 'image': 'assets/cycling-image.jpeg'},
+      {'label': 'Strength', 'image': 'assets/strength-image.jpeg'},
       {
         'label': 'Core&Abs',
-        'image': 'https://hips.hearstapps.com/menshealth-uk/main/thumbs/26789/abs.jpg?resize=980:*'
+        'image':
+            'https://hips.hearstapps.com/menshealth-uk/main/thumbs/26789/abs.jpg?resize=980:*',
       },
-      {
-        'label': 'Pilates',
-        'image': 'assets/pilates-image.jpeg'
-      },
+      {'label': 'Pilates', 'image': 'assets/pilates-image.jpeg'},
     ];
-
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Activity Entry", style: kAppBarTitleTextStyle,),
+        title: Text("Activity Entry", style: kAppBarTitleTextStyle),
         centerTitle: true,
+        backgroundColor: AppColors.appBarColor,
       ),
       body: Padding(
         padding: AppPaddings.all16,
@@ -103,59 +94,62 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               physics: NeverScrollableScrollPhysics(),
-              children: workoutStyles.map((style) {
-                final label = style['label']!;
-                final image = style['image'];
-                final isSelected = selectedWorkout == label;
-                return GestureDetector(
-                  onTap: () => setState(() => selectedWorkout = label),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        image != null
-                            ? (image.startsWith('http')
-                                ? Image.network(image, fit: BoxFit.cover)
-                                : Image.asset(image, fit: BoxFit.cover))
-                            : Container(color: Colors.grey.shade300),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.4),
-                          ),
-                        ),
-                        Center(
-                          child: Text(
-                            label,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+              children:
+                  workoutStyles.map((style) {
+                    final label = style['label']!;
+                    final image = style['image'];
+                    final isSelected = selectedWorkout == label;
+                    return GestureDetector(
+                      onTap: () => setState(() => selectedWorkout = label),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            image != null
+                                ? (image.startsWith('http')
+                                    ? Image.network(image, fit: BoxFit.cover)
+                                    : Image.asset(image, fit: BoxFit.cover))
+                                : Container(color: Colors.grey.shade300),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.4),
+                              ),
                             ),
-                          ),
-                        ),
-                        if (isSelected)
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.deepPurple, width: 4),
-                              borderRadius: BorderRadius.circular(12),
+                            Center(
+                              child: Text(
+                                label,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                      ],
-                    ),
-
-                  ),
-                );
-              }).toList(),
+                            if (isSelected)
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.send,
+                                    width: 6,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
             ),
             const SizedBox(height: 20),
             ListTile(
-              title: Text("Date", style: kButtonLightTextStyle,),
+              title: Text("Date", style: kButtonLightTextStyle),
               trailing: Text(dateString),
               onTap: _pickDate,
             ),
             ListTile(
-              title: Text("Time", style: kButtonLightTextStyle,),
+              title: Text("Time", style: kButtonLightTextStyle),
               trailing: Text(timeString),
               onTap: _pickTime,
             ),
@@ -164,7 +158,10 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
               children: [
                 Text("Duration: ", style: kButtonLightTextStyle),
                 IconButton(
-                  onPressed: () => setState(() => duration = duration > 0 ? duration - 1 : 0),
+                  onPressed:
+                      () => setState(
+                        () => duration = duration > 0 ? duration - 1 : 0,
+                      ),
                   icon: Icon(Icons.remove_circle_outline),
                 ),
                 Text("$duration minutes", style: kButtonLightTextStyle),
@@ -183,6 +180,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 return ChoiceChip(
                   label: Text("$level"),
                   selected: intensity == level,
+                  selectedColor: AppColors.buttonColor,
                   onSelected: (_) => setState(() => intensity = level),
                 );
               }),
@@ -204,16 +202,19 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 FilterChip(
                   label: Text("Scheduled"),
                   selected: status == 'Scheduled',
+                  selectedColor: AppColors.buttonColor,
                   onSelected: (_) => setState(() => status = 'Scheduled'),
                 ),
                 FilterChip(
                   label: Text("In Progress"),
                   selected: status == 'In Progress',
+                  selectedColor: AppColors.buttonColor,
                   onSelected: (_) => setState(() => status = 'In Progress'),
                 ),
                 FilterChip(
                   label: Text("Completed"),
                   selected: status == 'Completed',
+                  selectedColor: AppColors.buttonColor,
                   onSelected: (_) => setState(() => status = 'Completed'),
                 ),
               ],
@@ -229,16 +230,23 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.buttonColor,
+              ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Pagecalendar()),
-                  );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Pagecalendar()),
+                );
               },
               child: Padding(
                 padding: AppPaddings.all12,
-                child: Text("Create the Activity", style: kButtonLightTextStyle),
+                child: Text(
+                  "Create the Activity",
+                  style: kButtonLightTextStyle,
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),

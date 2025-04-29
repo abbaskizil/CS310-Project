@@ -1,12 +1,9 @@
 import 'package:athletech/screens/activity_entry_page.dart';
-import 'package:athletech/screens/calendar_day.dart';
 import 'package:athletech/screens/calendar_page.dart';
 import 'package:athletech/screens/chat_screen.dart';
 import 'package:athletech/screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
-
-
 
 class BottomNavigator extends StatefulWidget {
   const BottomNavigator({super.key});
@@ -25,7 +22,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   }
 
   final List<Widget> _pages = [
-
     HomePage(),
     ChatScreen(),
     ActivityEntryApp(),
