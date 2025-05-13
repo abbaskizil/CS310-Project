@@ -10,11 +10,15 @@ class WorkoutService {
     final uid = _auth.currentUser?.uid;
     if (uid == null) throw Exception("User not logged in");
 
-    final snapshot = await _firestore
-        .collection('workouts')
-        .where('createdBy', isEqualTo: uid)
-        .where('status', isEqualTo: 'completed') // Filter completed workouts
-        .get();
+    final snapshot =
+        await _firestore
+            .collection('workouts')
+            .where('createdBy', isEqualTo: uid)
+            .where(
+              'status',
+              isEqualTo: 'Completed',
+            ) // Filter completed workouts
+            .get();
 
     int totalCalories = 0;
     int totalDuration = 0;
@@ -22,9 +26,11 @@ class WorkoutService {
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
-      totalDuration += (data['duration'] ?? 0) as int;
-      totalCalories += (data['caloriesBurned'] ?? 0) as int;
-      workoutCount += 1;
+      if (data['status'] == 'Completed') {
+        totalDuration += (data['duration'] ?? 0) as int;
+        totalCalories += (data['caloriesBurned'] ?? 0) as int;
+        workoutCount = workoutCount + 1;
+      }
     }
 
     // Fetch the total calories taken (from the 'calories' collection)
@@ -34,16 +40,17 @@ class WorkoutService {
       'workouts': workoutCount,
       'caloriesBurnt': totalCalories,
       'caloriesTaken': totalCaloriesTaken,
-      'duration': totalDuration.toString(), // Duration in minutes
+      'duration': totalDuration, // Duration in minutes
     };
   }
 
   // Fetch total calories taken by the user
   Future<int> _getTotalCaloriesTaken(String uid) async {
-    final snapshot = await _firestore
-        .collection('calories')
-        .where('createdBy', isEqualTo: uid)
-        .get();
+    final snapshot =
+        await _firestore
+            .collection('calories')
+            .where('createdBy', isEqualTo: uid)
+            .get();
 
     int totalCalories = 0;
     for (final doc in snapshot.docs) {
