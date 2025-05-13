@@ -1,0 +1,20 @@
+fix calendar and day pages (must)  --> done
+
+add log out button in profile page (must) --> done 
+
+make the minute addition faster (optional) --> done 
+
+when the status of the activity is either scheduled or in progress remove the calorie textfield 
+    and don't include them in the profile status card (optional) --> done
+
+add the functionality that the user data is pulled from the database and
+    autofilled when user enters BMI page (optional) --> done 
+
+show "member since" in the profile page, not in edit progile (optional)
+
+add calorie tracker to database -> done 
+
+profile cards + calories burnt and calories taken | fix going overbounds (must) -> in progress
+    -> broken rn, look into services for calories, workouts and the profile page 
+
+

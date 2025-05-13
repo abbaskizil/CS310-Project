@@ -1,8 +1,12 @@
-import 'package:athletech/screens/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:athletech/utilities/colors.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
-import 'package:athletech/utilities/colors.dart';
+import 'package:athletech/screens/settings.dart';
+import 'package:athletech/services/user_service.dart';
+import 'package:athletech/services/workout_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,25 +16,25 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // Example user data - you would fetch this from your backend or a service
-  final String _name = 'John';
-  final String _surname = 'Doe';
-  final String _email = 'john.doe@example.com';
-  final String _gender = "Male";
-  final double _height = 180.0;
-  final double _weight = 75.0;
-  final int _age = 28;
+  late Future<DocumentSnapshot<Map<String, dynamic>>> _profileFuture;
+  late Future<Map<String, dynamic>> _statsFuture;
 
-  // Example user stats
-  final int _workoutCount = 2;
-  final int _calorieIntake = 376;
-  final int _distanceRan = 153; // example distance or steps
+  @override
+  void initState() {
+    super.initState();
+    _profileFuture = UserService().getUserProfile();
+    _statsFuture = WorkoutService().getUserStats();
+  }
 
   void _editProfile() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const EditProfilePage()),
-    );
+    ).then((_) {
+      setState(() {
+        _profileFuture = UserService().getUserProfile();
+      });
+    });
   }
 
   @override
@@ -45,10 +49,9 @@ class _ProfilePageState extends State<ProfilePage> {
           backgroundColor: AppColors.appBarColor,
           title: Text('Profile', style: kAppBarTitleTextStyle),
           centerTitle: true,
-          actions: <Widget>[
+          actions: [
             IconButton(
               icon: const Icon(Icons.settings),
-
               onPressed: () {
                 Navigator.push(
                   context,
@@ -58,130 +61,207 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          padding: AppPaddings.all16,
-          child: Column(
-            children: [
-              // Profile picture or placeholder
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey[300],
-                backgroundImage: NetworkImage(
-                  'https://external-preview.redd.it/ehmAOFmGtL5VGRAq8Dkye2B9QlzVz0BzvT6o75NMgsc.jpg?auto=webp&s=ca3914b1948c660d10299f8dbc95a815dbf39043',
-                ), // Using NetworkImage here
-              ),
-              const SizedBox(height: 16),
-              Row(
+        body: FutureBuilder<List<dynamic>>(
+          future: Future.wait([_profileFuture, _statsFuture]),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError || snapshot.data == null) {
+              print('Profile or stats load error: ${snapshot.error}');
+              return const Center(child: Text("Failed to load profile/stats."));
+            }
+
+            final profileData =
+                snapshot.data![0].data() as Map<String, dynamic>;
+            final stats = snapshot.data![1] as Map<String, dynamic>;
+
+            // Extract profile fields...
+            final name = profileData['name'] ?? 'N/A';
+            final surname = profileData['surname'] ?? 'N/A';
+            final email = profileData['email'] ?? 'N/A';
+            final gender = profileData['gender'] ?? 'N/A';
+            final height = profileData['height']?.toString() ?? 'N/A';
+            final weight = profileData['weight']?.toString() ?? 'N/A';
+            final age = profileData['age']?.toString() ?? 'N/A';
+
+            // Extract stats
+            final workoutCount =
+                (stats['workouts'] is int
+                        ? stats['workouts']
+                        : (stats['workouts'] as double?)?.toInt())
+                    ?.toString() ??
+                'N/A';
+
+            final calorieBurnt =
+                (stats['caloriesBurnt'] as num?)?.toStringAsFixed(2) ?? 'N/A';
+            final calorieTaken =
+                (stats['caloriesTaken'] as num?)?.toStringAsFixed(2) ?? 'N/A';
+            final duration =
+                (stats['duration'] as num?)?.toStringAsFixed(2) ?? 'N/A';
+
+
+            return SingleChildScrollView(
+              padding: AppPaddings.all16,
+              child: Column(
                 children: [
-                  Expanded(
-                    child: ListTile(
-                      title: Text('Name', style: kButtonLightTextStyle),
-                      subtitle: Text(_name),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: const NetworkImage(
+                      'https://external-preview.redd.it/ehmAOFmGtL5VGRAq8Dkye2B9QlzVz0BzvT6o75NMgsc.jpg?auto=webp&s=ca3914b1948c660d10299f8dbc95a815dbf39043',
                     ),
                   ),
-                  Expanded(
-                    child: ListTile(
-                      title: Text('Surname', style: kButtonLightTextStyle),
-                      subtitle: Text(_surname),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Name', style: kButtonLightTextStyle),
+                          subtitle: Text(name),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Surname', style: kButtonLightTextStyle),
+                          subtitle: Text(surname),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          title: Text(
+                            'Weight (kg)',
+                            style: kButtonLightTextStyle,
+                          ),
+                          subtitle: Text(weight),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Height', style: kButtonLightTextStyle),
+                          subtitle: Text(height),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Age', style: kButtonLightTextStyle),
+                          subtitle: Text(age),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          title: Text('Gender', style: kButtonLightTextStyle),
+                          subtitle: Text(gender),
+                        ),
+                      ),
+                    ],
+                  ),
+                  ListTile(
+                    title: Text('Email', style: kButtonLightTextStyle),
+                    subtitle: Text(email),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.buttonColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey, width: 1),
                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _buildStatCards({
+                        'Workouts': workoutCount,
+                        'Duration (min)': duration,
+                        'Calories Burnt': calorieBurnt,
+                        'Calories Taken': calorieTaken,
+                      }),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+                  ElevatedButton.icon(
+                    onPressed: _editProfile,
+                    icon: const Icon(Icons.edit),
+                    label: Text('Edit Profile', style: kButtonLightTextStyle),
                   ),
                 ],
               ),
-
-              // User info
-              Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: Text('Weight (kg)', style: kButtonLightTextStyle),
-                      subtitle: Text(_weight.toString()),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      title: Text('Height', style: kButtonLightTextStyle),
-                      subtitle: Text(_height.toString()),
-                    ),
-                  ),
-                ],
-              ),
-
-              Row(
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: Text('Age', style: kButtonLightTextStyle),
-                      subtitle: Text(_age.toString()),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      title: Text('Gender', style: kButtonLightTextStyle),
-                      subtitle: Text(_gender.toString()),
-                    ),
-                  ),
-                ],
-              ),
-
-              ListTile(
-                title: Text('Email', style: kButtonLightTextStyle),
-                subtitle: Text(_email),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Stats
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.buttonColor,
-                  borderRadius: BorderRadius.circular(12), // optional
-                  border: Border.all(color: Colors.grey, width: 1),
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text('Your Stats', style: kButtonLightTextStyle),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildStatCard('Workouts', _workoutCount.toString()),
-                        _buildStatCard('Calories', _calorieIntake.toString()),
-                        _buildStatCard('Distance', _distanceRan.toString()),
-                      ],
-                    ),
-                    SizedBox(height: 12),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12),
-
-              // Edit Profile Button
-              ElevatedButton.icon(
-                onPressed: _editProfile,
-                icon: const Icon(Icons.edit),
-                label: Text('Edit Profile', style: kButtonLightTextStyle),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
 
+  Widget _buildStatCards(Map<String, String> stats) {
+    return GridView.builder(
+      shrinkWrap: true, // Ensures the grid fits within the screen
+      physics: const NeverScrollableScrollPhysics(), // Disables grid scrolling
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // 2 cards per row
+        crossAxisSpacing: 16.0, // Space between cards horizontally
+        mainAxisSpacing: 16.0, // Space between cards vertically
+        childAspectRatio: 1, // Maintains a square aspect ratio for the cards
+      ),
+      itemCount: stats.length,
+      itemBuilder: (context, index) {
+        // Get the keys and values for each stat card
+        String title = stats.keys.elementAt(index);
+        String value = stats.values.elementAt(index);
+
+        return _buildStatCard(title, value);
+      },
+    );
+  }
+
   Widget _buildStatCard(String title, String value) {
     return Card(
-      elevation: 2,
+      elevation: 4,
+      margin: const EdgeInsets.all(8.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Container(
-        width: 120,
-        padding: AppPaddings.all16,
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 8.0,
+              spreadRadius: 2.0,
+            ),
+          ],
+        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(value, style: kButtonLightTextStyle),
-            SizedBox(height: 4),
-            Text(title, style: kButtonLightTextStyle),
+            Text(
+              value,
+              style: kButtonLightTextStyle.copyWith(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: kButtonLightTextStyle.copyWith(
+                fontSize: 14.0,
+                color: Colors.grey[600],
+              ),
+            ),
           ],
         ),
       ),
@@ -189,8 +269,97 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-class EditProfilePage extends StatelessWidget {
+class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  final _formKey = GlobalKey<FormState>();
+  final _userService = UserService();
+
+  final _nameController = TextEditingController();
+  final _surnameController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _ageController = TextEditingController();
+  String _gender = 'Male';
+
+  bool _isLoading = false;
+  String _memberSince = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    try {
+      final snapshot = await _userService.getUserProfile();
+      final data = snapshot.data();
+      if (data != null) {
+        setState(() {
+          _nameController.text = data['name'] ?? '';
+          _surnameController.text = data['surname'] ?? '';
+          _heightController.text = data['height']?.toString() ?? '';
+          _weightController.text = data['weight']?.toString() ?? '';
+          _ageController.text = data['age']?.toString() ?? '';
+          _gender = data['gender'] ?? 'Male';
+
+          final timestamp = data['memberSince'];
+          if (timestamp is Timestamp) {
+            _memberSince =
+                '${timestamp.toDate().day}/${timestamp.toDate().month}/${timestamp.toDate().year}';
+          }
+        });
+      }
+    } catch (e) {
+      print('Error loading profile: $e');
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _userService.saveUserProfile(
+        name: _nameController.text.trim(),
+        surname: _surnameController.text.trim(),
+        height: int.parse(_heightController.text.trim()),
+        weight: int.parse(_weightController.text.trim()),
+        age: int.parse(_ageController.text.trim()),
+        gender: _gender,
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error saving profile: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to update profile')));
+    }
+
+    setState(() => _isLoading = false);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _surnameController.dispose();
+    _heightController.dispose();
+    _weightController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,151 +373,144 @@ class EditProfilePage extends StatelessWidget {
           backgroundColor: AppColors.appBarColor,
           title: Text('Edit Profile', style: kButtonLightTextStyle),
         ),
-        body: SingleChildScrollView(
-          padding: AppPaddings.all8,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: const [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.black12,
-                    child: Icon(Icons.person, size: 50),
-                  ),
-                  CircleAvatar(
-                    radius: 12,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.add, size: 16, color: Colors.black),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.buttonColor,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 12,
-                  ),
-                ),
-                child: Text('Save Changes', style: kButtonLightTextStyle),
-              ),
-              const SizedBox(height: 10),
-              Text('Member since 21/03/2025', style: kButtonLightTextStyle),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.buttonColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0), // internal padding
+        body:
+            _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                  padding: AppPaddings.all16,
+                  child: Form(
+                    key: _formKey,
                     child: Column(
-                      children: const [
-                        ProfileItem(label: 'Name', value: 'sampleName'),
-                        ProfileItem(label: 'Surname', value: 'sampleSurname'),
-                        ProfileItem(
-                          label: 'Email',
-                          value: 'youremail@gmail.com',
+                      children: [
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(labelText: 'Name'),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Enter name'
+                                      : null,
                         ),
-                        ProfileItem(
-                          label: 'Height',
-                          value: '171',
-                          trailing: 'Weight',
-                          trailingValue: '62',
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _surnameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Surname',
+                          ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Enter surname'
+                                      : null,
                         ),
-                        ProfileItem(
-                          label: 'Age',
-                          value: '21',
-                          trailing: 'Gender',
-                          trailingValue: 'Male',
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _emailControllerFromAuth(),
+                          enabled: false,
+                          decoration: const InputDecoration(labelText: 'Email'),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _heightController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Height (cm)',
+                          ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Enter height'
+                                      : null,
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _weightController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Weight (kg)',
+                          ),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Enter weight'
+                                      : null,
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _ageController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(labelText: 'Age'),
+                          validator:
+                              (value) =>
+                                  value == null || value.isEmpty
+                                      ? 'Enter age'
+                                      : null,
+                        ),
+                        const SizedBox(height: 10),
+                        DropdownButtonFormField<String>(
+                          value: _gender,
+                          items:
+                              ['Male', 'Female', 'Other']
+                                  .map(
+                                    (g) => DropdownMenuItem(
+                                      value: g,
+                                      child: Text(g),
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged: (value) {
+                            if (value != null) setState(() => _gender = value);
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Gender',
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _saveProfile,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.buttonColor,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: Text(
+                            'Save Changes',
+                            style: kButtonLightTextStyle,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _memberSince.isNotEmpty
+                              ? 'Member since $_memberSince'
+                              : '',
+                          style: kButtonLightTextStyle,
+                        ),
+                        const SizedBox(height: 30),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[300],
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: const Text('Discard Changes'),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.buttonColor,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 12,
-                  ),
-                ),
-                child: Text(
-                  'Discard Changes',
-                  style: kButtonLightTextStyle
-                ),
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
       ),
     );
   }
-}
 
-class ProfileItem extends StatelessWidget {
-  final String label;
-  final String value;
-  final String? trailing;
-  final String? trailingValue;
-
-  const ProfileItem({
-    super.key,
-    required this.label,
-    required this.value,
-    this.trailing,
-    this.trailingValue,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0, right: 12.0),
-              child: Icon(Icons.edit, size: 18),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: Text(label, style: kButtonLightTextStyle)),
-                    Text(value, style: kButtonLightTextStyle),
-                    if (trailing != null) ...[
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Text(trailing!, style: kButtonLightTextStyle),
-                      ),
-                      Text(trailingValue ?? '', style: kButtonLightTextStyle),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+  TextEditingController _emailControllerFromAuth() {
+    return TextEditingController(
+      text: FirebaseAuth.instance.currentUser?.email ?? '',
     );
   }
 }

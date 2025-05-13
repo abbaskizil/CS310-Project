@@ -2,6 +2,8 @@ import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BmiPage extends StatefulWidget {
   const BmiPage({super.key});
@@ -16,6 +18,29 @@ class _BmiPageState extends State<BmiPage> {
   TextEditingController heightController = TextEditingController();
   TextEditingController weightController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final data = doc.data();
+
+    if (data != null) {
+      setState(() {
+        ageController.text = data['age']?.toString() ?? '';
+        heightController.text = data['height']?.toString() ?? '';
+        weightController.text = data['weight']?.toString() ?? '';
+        gender = data['gender'] ?? '';
+      });
+    }
+  }
+
   void calculateBMI() {
     double height = double.tryParse(heightController.text) ?? 0;
     double weight = double.tryParse(weightController.text) ?? 0;
@@ -25,11 +50,10 @@ class _BmiPageState extends State<BmiPage> {
 
       showDialog(
         context: context,
-        builder:
-            (context) => AlertDialog(
-              title: Text('Your BMI', style: kButtonLightTextStyle),
-              content: Text(bmi.toStringAsFixed(2)),
-            ),
+        builder: (context) => AlertDialog(
+          title: Text('Your BMI', style: kButtonLightTextStyle),
+          content: Text(bmi.toStringAsFixed(2)),
+        ),
       );
     }
   }
@@ -46,11 +70,10 @@ class _BmiPageState extends State<BmiPage> {
           title: Text('BMI Calculator', style: kAppBarTitleTextStyle),
           centerTitle: true,
           backgroundColor: AppColors.appBarColor,
-
           elevation: 0,
         ),
         body: Padding(
-          padding: AppPaddings.all12,
+          padding: AppPaddings.horizontal32Vertical40,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -126,23 +149,19 @@ class _BmiPageState extends State<BmiPage> {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: calculateBMI,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.buttonColor,
-                ),
-                child: Text('Calculate BMI', style: kButtonLightTextStyle),
-              ),
-              SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.buttonColor,
-                ),
-                  child: Text('Go to ChatBox', style: kButtonLightTextStyle),
+                  onPressed: calculateBMI,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.buttonColor,
+                  ),
+                  child: Padding(
+                    padding: AppPaddings.symmetricH16,
+                    child: Text('Calculate BMI', style: kButtonLightTextStyle)
+                  ),
                 ),
               ),
+              SizedBox(height: 30),
             ],
           ),
         ),

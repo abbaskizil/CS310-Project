@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>205253672777-kbvpmfts707jfpu2cgajn1g2cnvqgok5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.205253672777-kbvpmfts707jfpu2cgajn1g2cnvqgok5</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCdwW7TgE5eVRBReeZGaRq41ZlFsCl3hug</string>
+	<key>GCM_SENDER_ID</key>
+	<string>205253672777</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.athletech</string>
+	<key>PROJECT_ID</key>
+	<string>atheletech</string>
+	<key>STORAGE_BUCKET</key>
+	<string>atheletech.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:205253672777:ios:70916e02db7b9fb4db6498</string>
+</dict>
+</plist>
