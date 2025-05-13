@@ -1,5 +1,5 @@
 import 'package:athletech/screens/activity_entry_page.dart';
-import 'package:athletech/screens/calendar_page.dart';
+import 'package:athletech/screens/day_page.dart';
 import 'package:athletech/screens/chat_screen.dart';
 import 'package:athletech/screens/home_page.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     HomePage(),
     ChatScreen(),
     ActivityEntryApp(),
-    CalendarPage(),
+    DayPage(),
     ProfilePage(),
   ];
 

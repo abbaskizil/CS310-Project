@@ -1,8 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -22,36 +24,75 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isLoading = false;
 
   void _register() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      // Simulate network request
-      await Future.delayed(const Duration(seconds: 2));
-      setState(() => _isLoading = false);
-      // Navigate to Sign In page after registration
+  if (_formKey.currentState!.validate()) {
+    setState(() => _isLoading = true);
+
+    try {
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+      // Optionally store user's display name
+      await credential.user!.updateDisplayName(_nameController.text.trim());
+
+      // ONLY NAVIGATE HERE ON SUCCESS
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const SignInPage()),
       );
-    } else {
-      // Show alert if form invalid
+
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'email-already-in-use':
+          message = 'This email is already registered.';
+          break;
+        case 'weak-password':
+          message = 'The password is too weak.';
+          break;
+        default:
+          message = 'Registration failed: ${e.message}';
+      }
+
       showDialog(
         context: context,
-        builder:
-            (context) => AlertDialog(
-              title: const Text('Invalid Form'),
-              content: const Text(
-                'Please correct the errors before proceeding.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK'),
-                ),
-              ],
+        builder: (_) => AlertDialog(
+          title: const Text('Registration Failed'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
             ),
+          ],
+        ),
       );
+    } finally {
+      // Turn off loading indicator in finally block, so it always happens
+      setState(() => _isLoading = false);
     }
+  } else {
+    // Show alert if form invalid
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Invalid Form'),
+        content: const Text(
+          'Please correct the errors before proceeding.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
+}
+
 
   @override
   void dispose() {
@@ -231,3 +272,4 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
+

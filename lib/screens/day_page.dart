@@ -1,75 +1,94 @@
+import 'package:athletech/screens/calendar_page.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Pagecalendar extends StatefulWidget {
-  const Pagecalendar({super.key});
+class DayPage extends StatefulWidget {
+  const DayPage({super.key});
 
   @override
-  State<Pagecalendar> createState() => _PagecalendarState();
+  State<DayPage> createState() => _DayPageState();
 }
 
-class _PagecalendarState extends State<Pagecalendar> {
-  String selectedDay = '21'; // Default selected
+class _DayPageState extends State<DayPage> {
+  DateTime selectedDate = DateTime.now();
 
-  final Map<String, Map<String, String>> statsPerDay = {
-    '18': {'steps': '6,542', 'calories': '310'},
-    '19': {'steps': '7,110', 'calories': '345'},
-    '20': {'steps': '5,980', 'calories': '290'},
-    '21': {'steps': '7,843', 'calories': '376'},
-    '22': {'steps': '8,102', 'calories': '400'},
-    '23': {'steps': '6,870', 'calories': '320'},
-    '24': {'steps': '9,200', 'calories': '450'},
-  };
+  Map<String, List<Map<String, dynamic>>> activities = {};
+  Set<String> workoutDays = {}; 
 
-  Map<String, List<Map<String, dynamic>>> activities = {
-    '21': [
-      {
-        'color': Colors.orange,
-        'title': 'Strength Training',
-        'subtitle': 'Gym - Total Duration: 01:15:00',
-      },
-      {
-        'color': Colors.blue,
-        'title': 'Cardio Run',
-        'subtitle': 'Outdoor - Total Duration: 00:45:00',
-      },
-    ],
-    '22': [
-      {
-        'color': Colors.green,
-        'title': 'Yoga',
-        'subtitle': 'Home - Duration: 00:30:00',
-      },
-    ],
-  };
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = DateTime.now();
+    fetchWorkouts();
+  }
 
-  void addActivity(String day) {
-    setState(() {
-      activities.putIfAbsent(day, () => []);
-      activities[day]!.add({
-        'color': Colors.purple,
-        'title': 'New Activity',
-        'subtitle': 'Manual entry - Duration: 00:20:00',
+  Future<void> fetchWorkouts() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    // Fetch workouts from Firestore
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('workouts')
+            .where('createdBy', isEqualTo: uid)
+            .get();
+
+    final Map<String, List<Map<String, dynamic>>> temp = {};
+    final Set<String> daysWithWorkouts = {};
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final timestamp = data['createdAt'] as Timestamp;
+      final date = timestamp.toDate();
+
+      // Use just the day of the month as the key for the workoutDays set
+      final dayKey = date.day.toString();
+      daysWithWorkouts.add(dayKey);
+
+      // Use the full date (year-month-day) as the key for activities map
+      // This is a more robust key for activities if you ever look beyond just the day number
+      final activityDateKey = '${date.year}-${date.month}-${date.day}';
+
+      temp.putIfAbsent(activityDateKey, () => []).add({
+        'color': Colors.blueAccent,
+        'title': data['type'] ?? 'Workout',
+        'subtitle': 'Duration: ${data['duration']} min\nNotes: ${data['note']}',
       });
+    }
+
+    setState(() {
+      activities = temp;
+      workoutDays = daysWithWorkouts;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final dayList = [
-      {'day': '18', 'label': 'Mon'},
-      {'day': '19', 'label': 'Tue'},
-      {'day': '20', 'label': 'Wed'},
-      {'day': '21', 'label': 'Thu'},
-      {'day': '22', 'label': 'Fri'},
-      {'day': '23', 'label': 'Sat'},
-      {'day': '24', 'label': 'Sun'},
-    ];
+    // --- Start: Dynamically generate the dayList ---
+    final now = DateTime.now();
+    final dayList = <Map<String, String>>[];
+    final weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']; // 0-indexed for convenience
 
-    final currentStats =
-        statsPerDay[selectedDay] ?? {'steps': '0', 'calories': '0'};
+    for (int i = 0; i < 7; i++) {
+      final date = now.add(Duration(days: i));
+      final dayNumber = date.day.toString();
+      final weekdayLabel = weekdayLabels[date.weekday - 1]; // Adjust for 0-indexing
+
+      dayList.add({
+        'day': dayNumber,
+        'label': weekdayLabel,
+      });
+    }
+    // --- End: Dynamically generate the dayList ---
+
+    // Create a key for accessing activities based on the selected full date
+    final selectedDateKey = '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}';
+    final activitiesForSelectedDay = activities[selectedDateKey] ?? [];
+
 
     return Theme(
       data: ThemeData(
@@ -92,51 +111,61 @@ class _PagecalendarState extends State<Pagecalendar> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('March 2025 ▼', style: kButtonLightTextStyle),
-                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => CalendarPage()),
+                      );
+                    },
+                    child: Text(
+                      // Display the current month and year of the selected date
+                      '${_getMonthName(selectedDate.month)} ${selectedDate.year} ▼',
+                      style: kButtonLightTextStyle
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
-
-              // Günler
               SizedBox(
                 height: 60,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children:
                       dayList.map((d) {
+                        // Check if the dynamically generated day matches the day of the selectedDate
+                        final bool isSelected = selectedDate.day.toString() == d['day']!;
                         return GestureDetector(
-                          onTap: () => setState(() => selectedDay = d['day']!),
+                          // Update selectedDate to the full DateTime object
+                          onTap: () {
+                             // Find the actual DateTime corresponding to the tapped day
+                             final tappedDay = dayList.indexOf(d); // 0 to 6
+                             setState(() {
+                               selectedDate = now.add(Duration(days: tappedDay));
+                             });
+                          },
                           child: _dayColumn(
                             d['day']!,
                             d['label']!,
-                            selectedDay == d['day'],
+                            isSelected, // Use the isSelected flag
+                            hasWorkout: workoutDays.contains(d['day']!),
                           ),
                         );
                       }).toList(),
                 ),
               ),
-
               const SizedBox(height: 20),
               Text('Weekly View', style: kButtonLightTextStyle),
               const SizedBox(height: 10),
-
-              Row(
-                children: [
-                  _summaryBox('Daily Steps', currentStats['steps']!),
-                  const SizedBox(width: 10),
-                  _summaryBox('Calories', currentStats['calories']!),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
+              // Removed the extra SizedBox here
+              // const SizedBox(height: 20),
               Row(
                 children: [
                   const Icon(Icons.check_box_outline_blank),
                   const SizedBox(width: 10),
                   Text(
-                    '$selectedDay March',
+                    // Display the day and month of the selected date
+                    '${selectedDate.day} ${_getMonthName(selectedDate.month)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -144,26 +173,31 @@ class _PagecalendarState extends State<Pagecalendar> {
               Padding(
                 padding: AppPaddings.onlyLeft12,
                 child: Text(
-                  '${activities[selectedDay]?.length ?? 0} activities scheduled',
+                  // Use the activitiesForSelectedDay list
+                  '${activitiesForSelectedDay.length} activities scheduled',
                   style: const TextStyle(color: Colors.grey),
                 ),
               ),
-
               const SizedBox(height: 20),
-
-              // Aktiviteler
-              ...?activities[selectedDay]?.map((activity) {
-                return Column(
-                  children: [
-                    _activityItem(
-                      color: activity['color'],
-                      title: activity['title'],
-                      subtitle: activity['subtitle'],
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                );
-              }).toList(),
+              // Use the activitiesForSelectedDay list for display
+              Expanded( // Wrap the list of activities in Expanded and use ListView
+                 child: ListView.builder(
+                   itemCount: activitiesForSelectedDay.length,
+                   itemBuilder: (context, index) {
+                     final activity = activitiesForSelectedDay[index];
+                     return Column(
+                        children: [
+                           _activityItem(
+                             color: activity['color'], // Make sure color is stored if needed
+                             title: activity['title'],
+                             subtitle: activity['subtitle'],
+                           ),
+                           const SizedBox(height: 10),
+                        ],
+                     );
+                   },
+                 ),
+              ),
             ],
           ),
         ),
@@ -171,38 +205,16 @@ class _PagecalendarState extends State<Pagecalendar> {
     );
   }
 
-  Widget _summaryBox(String title, String value) {
-    return Expanded(
-      child: Container(
-        padding: AppPaddings.all12,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.black, // canlı yazı
-              ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.black, // canlı değer
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  // Helper function to get month name
+  String _getMonthName(int month) {
+    const monthNames = [
+      '', // Month is 1-indexed
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return monthNames[month];
   }
+
 
   Widget _activityItem({
     required Color color,
@@ -226,15 +238,12 @@ class _PagecalendarState extends State<Pagecalendar> {
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
-                  color: Colors.black, // canlı hale geldi
+                  color: Colors.black,
                 ),
               ),
               Text(
                 subtitle,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 15, // biraz daha büyük
-                ),
+                style: const TextStyle(color: Colors.grey, fontSize: 15),
               ),
             ],
           ),
@@ -248,15 +257,38 @@ class _PagecalendarState extends State<Pagecalendar> {
     );
   }
 
-  static Widget _dayColumn(String day, String label, bool selected) {
+  static Widget _dayColumn(
+    String day,
+    String label,
+    bool selected, {
+    bool hasWorkout = false,
+  }) {
     return Column(
       children: [
-        Text(
-          day,
-          style: TextStyle(
-            color: selected ? Colors.black : Colors.grey,
-            fontWeight: FontWeight.bold,
-          ),
+        Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Text(
+              day,
+              style: TextStyle(
+                color: selected ? Colors.black : Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (hasWorkout)
+              Positioned(
+                right: -8,
+                top: -2,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

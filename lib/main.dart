@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:athletech/firebase_options.dart';
+
 import 'screens/activity_entry_page.dart';
 import 'screens/bmi_page.dart';
 import 'screens/bottom_navigator.dart';
@@ -14,9 +17,18 @@ import 'screens/sign_in_page.dart';
 import 'screens/SplashScreen.dart';
 import 'utilities/colors.dart';
 
+import 'package:flutter/foundation.dart'; // Add this for kIsWeb
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: kIsWeb
+        ? DefaultFirebaseOptions.web
+        : DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/activity_entry': (context) => ActivityEntryPage(),
         '/bmi': (context) => BmiPage(),
         '/bottom_navigator': (context) => BottomNavigator(),
-        '/day': (context) => Pagecalendar(),
+        '/day': (context) => DayPage(),
         '/calendar': (context) => CalendarPage(),
         '/CalorieTracker': (context) => CalorieTracker(),
         '/chat': (context) => ChatScreen(),

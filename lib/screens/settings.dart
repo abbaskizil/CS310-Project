@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -28,6 +29,7 @@ class SettingsScreen extends StatelessWidget {
                 imagePath: 'assets/AccountPrivacy_image.png',
                 title: 'Account Privacy',
                 dialogMessage: 'Welcome to the Account Privacy Screen!',
+                isLogout: false
               ),
               _buildSettingItem(
                 context: context,
@@ -35,18 +37,28 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Contact Us',
                 dialogMessage:
                     'You can reach out to us at support@example.com.',
+                isLogout: false
               ),
               _buildSettingItem(
                 context: context,
                 imagePath: 'assets/UserAgreement_image.png',
                 title: 'User Agreement',
                 dialogMessage: 'Here is the User Agreement.',
+                isLogout: false
               ),
               _buildSettingItem(
                 context: context,
                 imagePath: 'assets/AccountSettings_image.png',
                 title: 'Account Settings',
                 dialogMessage: 'Change your account settings here.',
+                isLogout: false
+              ),
+              _buildSettingItem(
+                context: context,
+                imagePath: 'assets/logout_icon.png',
+                title: 'Log out',
+                dialogMessage: '',
+                isLogout: true
               ),
             ],
           ),
@@ -84,6 +96,7 @@ class SettingsScreen extends StatelessWidget {
     required String imagePath,
     required String title,
     required String dialogMessage,
+    bool isLogout = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -94,16 +107,27 @@ class SettingsScreen extends StatelessWidget {
             topLeft: Radius.circular(40),
             bottomLeft: Radius.circular(40),
           ),
-          onTap: () {
-            showDialog(
-              context: context,
-              builder:
-                  (context) => _buildAlertDialog(
-                    context,
-                    title: title,
-                    message: dialogMessage,
-                  ),
-            );
+          onTap: () async {
+            if (isLogout) {
+              await FirebaseAuth.instance.signOut();
+              // Navigate to login screen (replace with your route)
+              if (context.mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/sign_in',
+                  (route) => false,
+                );
+              }
+            } else {
+              showDialog(
+                context: context,
+                builder:
+                    (context) => _buildAlertDialog(
+                      context,
+                      title: title,
+                      message: dialogMessage,
+                    ),
+              );
+            }
           },
           child: Row(
             children: [

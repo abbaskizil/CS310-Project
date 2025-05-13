@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "205253672777",
+    "project_id": "atheletech",
+    "storage_bucket": "atheletech.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205253672777:android:8d7baef39e1c1435db6498",
+        "android_client_info": {
+          "package_name": "com.example.athletech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205253672777-4fjdf4kk8dovl9o30lenjhcte7jtafur.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpAKRyOnTlieZPuxWJD2-1zQczQG0-v2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "205253672777-4fjdf4kk8dovl9o30lenjhcte7jtafur.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "205253672777-kbvpmfts707jfpu2cgajn1g2cnvqgok5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.athletech"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

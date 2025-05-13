@@ -1,9 +1,11 @@
-import 'register_page.dart';
 import 'package:flutter/material.dart';
-import 'bottom_navigator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:athletech/screens/register_page.dart';
+import 'package:athletech/screens/bottom_navigator.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -14,54 +16,63 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _isLoading = false;
+  bool _isSendingPasswordReset = false;
 
   void _signIn() async {
-    // Validate form
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
 
-      // TODO: Integrate with backend when available
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
 
-      setState(() {
-        _isLoading = false;
-      });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavigator()),
+        );
+      } on FirebaseAuthException catch (e) {
+        Fluttertoast.showToast(msg: e.message ?? 'Sign in failed.');
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
-      // Navigate to home/profile page after successful login
-      // Navigator.pushNamed(context, '/bottom_navigator');
+  Future<void> _sendPasswordResetEmail() async {
+    final email = _emailController.text.trim();
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => BottomNavigator()),
-      );
-    } else {
-      // Show alert dialog if the form is invalid
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Invalid Form', style: kButtonLightTextStyle),
+    if (email.isEmpty) {
+      Fluttertoast.showToast(msg: 'Please enter your email address.');
+      return;
+    }
 
-            content: Text(
-              'Please correct the errors in the form before submitting.',
-              style: kButtonLightTextStyle,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK', style: kButtonLightTextStyle),
-              ),
-            ],
-          );
-        },
-      );
+    setState(() => _isSendingPasswordReset = true);
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      Fluttertoast.showToast(msg: 'Password reset email sent to $email.');
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'invalid-email':
+          message = 'Invalid email address.';
+          break;
+        case 'user-not-found':
+          message = 'If an account exists, a reset email has been sent.';
+          break;
+        default:
+          message = e.message ?? 'Failed to send reset email.';
+      }
+      Fluttertoast.showToast(msg: message);
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'An error occurred. Try again later.');
+    } finally {
+      setState(() => _isSendingPasswordReset = false);
     }
   }
 
@@ -91,7 +102,6 @@ class _SignInPageState extends State<SignInPage> {
             key: _formKey,
             child: Column(
               children: [
-                // Email TextField
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -104,17 +114,14 @@ class _SignInPageState extends State<SignInPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    // Basic email pattern validation
                     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                     if (!emailRegex.hasMatch(value)) {
-                      return 'Please enter a valid email address';
+                      return 'Enter a valid email';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
-
-                // Password TextField
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
@@ -134,49 +141,36 @@ class _SignInPageState extends State<SignInPage> {
                   },
                 ),
                 const SizedBox(height: 8),
-
-                // Forgot Password button
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const AlertDialog(
-                            title: Center(child: Text("Forgot Password")),
-                            content: Text('This feature is coming soon.'),
-                          );
-                        },
-                      );
-                    },
-                    child: Text(
-                      'Forgot your password?',
-                      style: kButtonLightTextStyle,
-                    ),
+                    onPressed: _isSendingPasswordReset ? null : _sendPasswordResetEmail,
+                    child: _isSendingPasswordReset
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                            ),
+                          )
+                        : Text('Forgot your password?', style: kButtonLightTextStyle),
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Sign In button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.buttonColor
+                      backgroundColor: AppColors.buttonColor,
                     ),
                     onPressed: _isLoading ? null : _signIn,
-                    child:
-                        _isLoading
-                            ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                            : Text('Sign In', style: kButtonLightTextStyle),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text('Sign In', style: kButtonLightTextStyle),
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Terms of Service & Privacy Policy
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -184,11 +178,9 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) {
-                            return const AlertDialog(
-                              title: Center(child: Text("Terms of Service")),
-                            );
-                          },
+                          builder: (context) => const AlertDialog(
+                            title: Center(child: Text("Terms of Service")),
+                          ),
                         );
                       },
                       child: const Text('Terms of Service'),
@@ -198,21 +190,16 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) {
-                            return const AlertDialog(
-                              title: Center(child: Text("Privacy Policy")),
-                            );
-                          },
+                          builder: (context) => const AlertDialog(
+                            title: Center(child: Text("Privacy Policy")),
+                          ),
                         );
                       },
                       child: const Text('Privacy Policy'),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 10),
-
-                // Register Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -221,9 +208,7 @@ class _SignInPageState extends State<SignInPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterPage(),
-                          ),
+                          MaterialPageRoute(builder: (_) => const RegisterPage()),
                         );
                       },
                       child: const Text(
