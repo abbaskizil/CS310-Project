@@ -1,3 +1,4 @@
+import 'package:athletech/services/calories_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -73,9 +74,9 @@ class _ProfilePageState extends State<ProfilePage> {
               return const Center(child: Text("Failed to load profile/stats."));
             }
 
-            final profileData =
-                snapshot.data![0].data() as Map<String, dynamic>;
+            final profileData = snapshot.data![0].data() as Map<String, dynamic>;
             final stats = snapshot.data![1] as Map<String, dynamic>;
+            print(stats);
 
             // Extract profile fields...
             final name = profileData['name'] ?? 'N/A';
@@ -98,9 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 (stats['caloriesBurnt'] as num?)?.toStringAsFixed(2) ?? 'N/A';
             final calorieTaken =
                 (stats['caloriesTaken'] as num?)?.toStringAsFixed(2) ?? 'N/A';
-            final duration =
-                (stats['duration'] as num?)?.toStringAsFixed(2) ?? 'N/A';
-
+            final duration = stats['duration']?.toString() ?? 'N/A';
 
             return SingleChildScrollView(
               padding: AppPaddings.all16,
