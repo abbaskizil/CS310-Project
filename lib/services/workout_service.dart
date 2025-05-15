@@ -27,9 +27,10 @@ class WorkoutService {
     for (final doc in snapshot.docs) {
       final data = doc.data();
       if (data['status'] == 'Completed') {
-        totalDuration += (data['duration'] ?? 0) as int;
-        totalCalories += (data['caloriesBurned'] ?? 0) as int;
-        workoutCount = workoutCount + 1;
+        totalDuration += ((data['duration'] ?? 0) as num).toInt();
+        totalCalories += ((data['caloriesBurned'] ?? 0) as num).toInt();
+
+        workoutCount += 1;
       }
     }
 
@@ -55,7 +56,7 @@ class WorkoutService {
     int totalCalories = 0;
     for (final doc in snapshot.docs) {
       final data = doc.data();
-      totalCalories += (data['calories'] ?? 0) as int;
+      totalCalories += ((data['calories'] ?? 0) as num).toInt();
     }
 
     return totalCalories;

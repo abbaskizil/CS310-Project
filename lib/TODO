@@ -16,5 +16,10 @@ add calorie tracker to database -> done
 
 profile cards + calories burnt and calories taken | fix going overbounds (must) -> in progress
     -> broken rn, look into services for calories, workouts and the profile page 
+        -> done 
+
+register page get all the needed values (or enter null for the unnecessary ones such that it does not give any error) (must - crashes otherwise if some other user enters)
+
+fix user collection right now it does not register any user in the database -not shown for some reason- but still can register users (must) 
 
 
