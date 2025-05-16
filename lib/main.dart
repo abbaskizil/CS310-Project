@@ -16,7 +16,7 @@ import 'screens/settings.dart';
 import 'screens/sign_in_page.dart';
 import 'screens/SplashScreen.dart';
 import 'utilities/colors.dart';
-
+import 'package:athletech/screens/social_feed_page.dart';
 import 'package:flutter/foundation.dart'; // Add this for kIsWeb
 
 void main() async {
@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => SettingsScreen(),
         '/sign_in': (context) => SignInPage(),
         '/SplashScreen': (context) => SplashScreen(),
+        '/social_feed': (context) => const SocialFeedPage(),
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(

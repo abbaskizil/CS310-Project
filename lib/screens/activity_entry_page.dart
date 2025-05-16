@@ -6,9 +6,13 @@ import 'day_page.dart';
 import 'package:intl/intl.dart';
 import 'package:athletech/services/activity_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:athletech/services/social_feed_service.dart';
+
+
 
 class ActivityEntryApp extends StatelessWidget {
   const ActivityEntryApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +27,31 @@ class ActivityEntryApp extends StatelessWidget {
   }
 }
 
+
 class ActivityEntryPage extends StatefulWidget {
   const ActivityEntryPage({super.key});
+
 
   @override
   _ActivityEntryPageState createState() => _ActivityEntryPageState();
 }
 
+
 class _ActivityEntryPageState extends State<ActivityEntryPage> {
   int duration = 0;
   int intensity = 1;
-  String status = 'Completed'; // Keep 'Completed' as the initial default
+  String status = 'Completed';
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: 8, minute: 0);
   String? selectedWorkout;
   TextEditingController notesController = TextEditingController();
   TextEditingController calorieController = TextEditingController();
+  bool shareToSocialFeed = false;
+
+
+
+
+
 
   Future<void> _pickDate() async {
     final DateTime? picked = await showDatePicker(
@@ -52,6 +65,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
     }
   }
 
+
   Future<void> _pickTime() async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -62,18 +76,21 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
     }
   }
 
+
   @override
   void dispose() {
-    // Remember to dispose of your controllers!
+
     notesController.dispose();
     calorieController.dispose();
     super.dispose();
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
-    final dateString = DateFormat.yMMMMd().format(selectedDate); // Added day for clarity
+    final dateString = DateFormat.yMMMMd().format(selectedDate);
     final timeString = selectedTime.format(context);
     final workoutStyles = [
       {'label': 'Cycling', 'image': 'assets/cycling-image.jpeg'},
@@ -81,13 +98,16 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
       {
         'label': 'Core&Abs',
         'image':
-            'https://hips.hearstapps.com/menshealth-uk/main/thumbs/26789/abs.jpg?resize=980:*',
+        'https://hips.hearstapps.com/menshealth-uk/main/thumbs/26789/abs.jpg?resize=980:*',
       },
       {'label': 'Pilates', 'image': 'assets/pilates-image.jpeg'},
-       ];
+    ];
 
-    // Determine if the calorie/intensity fields should be visible
+
+
     final bool showCompletionDetails = status == 'Completed';
+
+
 
 
     return Scaffold(
@@ -110,52 +130,52 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
               mainAxisSpacing: 12,
               physics: NeverScrollableScrollPhysics(),
               children:
-                  workoutStyles.map((style) {
-                    final label = style['label']!;
-                    final image = style['image'];
-                    final isSelected = selectedWorkout == label;
-                    return GestureDetector(
-                      onTap: () => setState(() => selectedWorkout = label),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            image != null
-                                ? (image.startsWith('http')
-                                    ? Image.network(image, fit: BoxFit.cover)
-                                    : Image.asset(image, fit: BoxFit.cover))
-                                : Container(color: Colors.grey.shade300),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.4),
-                              ),
-                            ),
-                            Center(
-                              child: Text(
-                                label,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            if (isSelected)
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.send,
-                                    width: 6,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                          ],
+              workoutStyles.map((style) {
+                final label = style['label']!;
+                final image = style['image'];
+                final isSelected = selectedWorkout == label;
+                return GestureDetector(
+                  onTap: () => setState(() => selectedWorkout = label),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        image != null
+                            ? (image.startsWith('http')
+                            ? Image.network(image, fit: BoxFit.cover)
+                            : Image.asset(image, fit: BoxFit.cover))
+                            : Container(color: Colors.grey.shade300),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
+                        Center(
+                          child: Text(
+                            label,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        if (isSelected)
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.send,
+                                width: 6,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 20),
             ListTile(
@@ -172,33 +192,33 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
             Row(
               children: [
                 Text("Duration: ", style: kButtonLightTextStyle),
-                // Minus 5 Button
+
                 ElevatedButton(
                   onPressed: () => setState(() {
-                    duration = duration > 5 ? duration - 5 : 0; // Ensure duration doesn't go below 0
+                    duration = duration > 5 ? duration - 5 : 0;
                   }),
                   child: const Text('-5'),
                 ),
-                const SizedBox(width: 8), // Added spacing
+                const SizedBox(width: 8),
                 // Minus 1 Button
                 ElevatedButton(
                   onPressed: () => setState(() {
-                    duration = duration > 0 ? duration - 1 : 0; // Ensure duration doesn't go below 0
+                    duration = duration > 0 ? duration - 1 : 0;
                   }),
                   child: const Text('-1'),
                 ),
-                 const SizedBox(width: 16), // Added spacing
-                Expanded( // Use Expanded to prevent overflow for the duration text
-                   child: Text("$duration minutes", style: kButtonLightTextStyle),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text("$duration minutes", style: kButtonLightTextStyle),
                 ),
-                 const SizedBox(width: 16), // Added spacing
-                // Plus 1 Button
+                const SizedBox(width: 16),
+
                 ElevatedButton(
                   onPressed: () => setState(() => duration = duration + 1),
                   child: const Text('+1'),
                 ),
-                 const SizedBox(width: 8), // Added spacing
-                // Plus 5 Button
+                const SizedBox(width: 8),
+
                 ElevatedButton(
                   onPressed: () => setState(() => duration = duration + 5),
                   child: const Text('+5'),
@@ -207,8 +227,9 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
             ),
             const SizedBox(height: 16),
 
-            // --- Start of conditional rendering for Completion Details ---
-            if (showCompletionDetails) ...[ // Use the spread operator (...) to insert multiple widgets
+
+
+            if (showCompletionDetails) ...[
               Text("Intensity Level", style: kButtonLightTextStyle),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,21 +255,20 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
               ),
               const SizedBox(height: 16),
             ],
-            // --- End of conditional rendering ---
+
+
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // Removed FilterChip for "Scheduled" for a cleaner look,
-                // using Radio buttons instead if multiple statuses are needed.
-                // Or keep FilterChips if preferred, just updating the state.
-                 FilterChip(
+
+                FilterChip(
                   label: Text("Scheduled"),
                   selected: status == 'Scheduled',
                   selectedColor: AppColors.buttonColor,
                   onSelected: (bool selected) {
                     setState(() {
-                      status = selected ? 'Scheduled' : status; // Only update if selected
+                      status = selected ? 'Scheduled' : status;
                     });
                   },
                 ),
@@ -256,9 +276,9 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                   label: Text("In Progress"),
                   selected: status == 'In Progress',
                   selectedColor: AppColors.buttonColor,
-                   onSelected: (bool selected) {
+                  onSelected: (bool selected) {
                     setState(() {
-                      status = selected ? 'In Progress' : status; // Only update if selected
+                      status = selected ? 'In Progress' : status;
                     });
                   },
                 ),
@@ -268,7 +288,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                   selectedColor: AppColors.buttonColor,
                   onSelected: (bool selected) {
                     setState(() {
-                      status = selected ? 'Completed' : status; // Only update if selected
+                      status = selected ? 'Completed' : status;
                     });
                   },
                 ),
@@ -283,26 +303,46 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 border: OutlineInputBorder(),
               ),
             ),
+
+            Row(
+              children: [
+                Checkbox(
+                  value: shareToSocialFeed,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      shareToSocialFeed = value ?? false;
+                    });
+                  },
+                ),
+                const Text("Share on Social Feed"),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+
             const SizedBox(height: 24),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.buttonColor,
               ),
               onPressed: () async {
-                if (selectedWorkout == null || duration == 0) { // Calorie and Intensity are no longer mandatory if not Completed
-                   Fluttertoast.showToast(
+                if (selectedWorkout == null || duration == 0) {
+                  Fluttertoast.showToast(
                     msg: 'Please select a workout style and set a duration.',
                   );
                   return;
                 }
 
-                // Additional check for calorie/intensity if status IS Completed
-                 if (status == 'Completed' && (calorieController.text.isEmpty || int.tryParse(calorieController.text.trim()) == null)) {
-                    Fluttertoast.showToast(
-                     msg: 'Please enter a valid number for burned calories.',
-                    );
-                   return;
-                 }
+
+
+                if (status == 'Completed' && (calorieController.text.isEmpty || int.tryParse(calorieController.text.trim()) == null)) {
+                  Fluttertoast.showToast(
+                    msg: 'Please enter a valid number for burned calories.',
+                  );
+                  return;
+                }
+
+
 
 
                 try {
@@ -315,22 +355,29 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                     selectedTime.minute,
                   );
 
+
                   await activityService.addActivity(
                     type: selectedWorkout!,
                     duration: duration,
-                    // Only include intensity and calories if status is Completed
-                    intensity: status == 'Completed' ? intensity : 0, // Or handle as null in backend
-                    caloriesBurned: status == 'Completed' ? (int.tryParse(calorieController.text.trim()) ?? 0) : 0, // Or handle as null
+                    intensity: status == 'Completed' ? intensity : 0,
+                    caloriesBurned: status == 'Completed' ? (int.tryParse(calorieController.text.trim()) ?? 0) : 0,
                     note: notesController.text.trim(),
                     scheduledDate: now,
-                    status: status
+                    status: status,
+                    shareToSocialFeed: shareToSocialFeed,
                   );
 
+
+
+
+
+
+
                   Fluttertoast.showToast(msg: 'Activity created!');
-                 Navigator.pushReplacement( // Example using pushReplacement
-                   context,
-                   MaterialPageRoute(builder: (context) => DayPage()),
-                 );
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => DayPage()),
+                  );
                 } catch (e) {
                   print('Error: $e');
                   Fluttertoast.showToast(msg: 'Failed to create activity.');
@@ -350,3 +397,5 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
     );
   }
 }
+
+

@@ -9,12 +9,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // A local helper to simplify icon → route mapping.
+
     Widget tool(IconData icon, String label, String dest) => _ToolIcon(
       icon: icon,
       label: label,
       onTap: () => Navigator.pushNamed(context, dest),
     );
+
     return Theme(
       data: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.appBarColor),
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("AtheleTech", style: kAppBarTitleTextStyle),
+          title: Text("AthleTech", style: kAppBarTitleTextStyle),
           backgroundColor: AppColors.appBarColor,
         ),
         body: SafeArea(
@@ -30,25 +31,16 @@ class HomePage extends StatelessWidget {
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
-                          _ActionChip(
-                            icon: Icons.favorite_border,
-                            label: 'Favorites',
-                          ),
+                          _ActionChip(icon: Icons.favorite_border, label: 'Favorites'),
                           _ActionChip(icon: Icons.history, label: 'History'),
-                          _ActionChip(
-                            icon: Icons.smart_toy_outlined,
-                            label: 'AI',
-                          ),
+                          _ActionChip(icon: Icons.smart_toy_outlined, label: 'AI'),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -69,21 +61,10 @@ class HomePage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            tool(
-                              Icons.monitor_weight_outlined,
-                              'BMI\n',
-                              '/bmi',
-                            ),
-                            tool(
-                              Icons.local_fire_department,
-                              'Calorie\ntracker',
-                              '/CalorieTracker',
-                            ),
-                            tool(
-                              CupertinoIcons.chart_pie,
-                              'Activity\nEntry',
-                              '/activity_entry',
-                            ),
+                            tool(Icons.monitor_weight_outlined, 'BMI\n', '/bmi'),
+                            tool(Icons.local_fire_department, 'Calorie\nTracker', '/CalorieTracker'),
+                            tool(CupertinoIcons.chart_pie, 'Activity\nEntry', '/activity_entry'),
+                            tool(Icons.people, 'Social\nFeed', '/social_feed'),
                           ],
                         ),
                       ),
@@ -161,7 +142,7 @@ class _ToolIcon extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
-    this.backgroundColor = AppColors.buttonColor, 
+    this.backgroundColor = AppColors.buttonColor,
     super.key,
   });
 
