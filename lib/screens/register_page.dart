@@ -5,6 +5,7 @@ import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:athletech/services/user_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,86 +17,91 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmController = TextEditingController();
+  // split name into first + surname
+  final _firstNameController = TextEditingController();
+  final _surnameController   = TextEditingController();
+  final _emailController     = TextEditingController();
+  final _passwordController  = TextEditingController();
+  final _confirmController   = TextEditingController();
 
+  final _userService = UserService();
   bool _isLoading = false;
 
   void _register() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+    if (!_formKey.currentState!.validate()) {
+      // show invalid‐form alert
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Invalid Form'),
+          content: const Text('Please correct the errors before proceeding.'),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
+          ],
+        ),
+      );
+      return;
+    }
 
-      try {
-        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    setState(() => _isLoading = true);
+    try {
+      // 1) Create Auth user
+      final cred = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        await credential.user!.updateDisplayName(_nameController.text.trim());
+      // 2) Update displayName
+      final fullName = '${_firstNameController.text.trim()} '
+                       '${_surnameController.text.trim()}';
+      await cred.user!.updateDisplayName(fullName);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const SignInPage()),
-        );
+      // 3) Write initial Firestore doc with defaults
+      await _userService.createUserProfile(
+        name:    _firstNameController.text.trim(),
+        surname: _surnameController.text.trim(),
+      );
 
-        Fluttertoast.showToast(msg: "Registration Successful!");
-      } on FirebaseAuthException catch (e) {
-        String message;
-        switch (e.code) {
-          case 'email-already-in-use':
-            message = 'This email is already registered.';
-            break;
-          case 'weak-password':
-            message = 'The password is too weak.';
-            break;
-          case 'invalid-email':
-            message = 'Invalid email format.';
-            break;
-          default:
-            message = 'Registration failed: ${e.message}';
-        }
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Registration Failed'),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      } finally {
-        setState(() => _isLoading = false);
+      Fluttertoast.showToast(msg: "Registration Successful!");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const SignInPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'email-already-in-use':
+          message = 'This email is already registered.';
+          break;
+        case 'weak-password':
+          message = 'The password is too weak.';
+          break;
+        case 'invalid-email':
+          message = 'Invalid email format.';
+          break;
+        default:
+          message = 'Registration failed: ${e.message}';
       }
-    } else {
-
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Invalid Form'),
-          content: const Text(
-            'Please correct the errors before proceeding.',
-          ),
+        builder: (_) => AlertDialog(
+          title: const Text('Registration Failed'),
+          content: Text(message),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
           ],
         ),
       );
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstNameController.dispose();
+    _surnameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
@@ -122,33 +128,36 @@ class _RegisterPageState extends State<RegisterPage> {
             key: _formKey,
             child: Column(
               children: [
-                // Başlık
                 const SizedBox(height: 16),
-                Text(
-                  'Welcome to AthleTech!',
-                  style: kButtonDarkTextStyle,
-                ),
+                Text('Welcome to AthleTech!', style: kButtonDarkTextStyle),
                 const SizedBox(height: 8),
-                Text(
-                  'Your Fitness Journey Companion',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                ),
+                Text('Your Fitness Journey Companion',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700])),
                 const SizedBox(height: 30),
 
-                // Full Name
+                // First Name
                 TextFormField(
-                  controller: _nameController,
+                  controller: _firstNameController,
                   decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    hintText: 'Enter your full name',
+                    labelText: 'First Name',
+                    hintText: 'Enter your first name',
                     prefixIcon: Icon(Icons.person),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your full name';
-                    }
-                    return null;
-                  },
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Please enter your first name' : null,
+                ),
+                const SizedBox(height: 16),
+
+                // Surname
+                TextFormField(
+                  controller: _surnameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Surname',
+                    hintText: 'Enter your surname',
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
+                  validator: (v) =>
+                      v == null || v.isEmpty ? 'Please enter your surname' : null,
                 ),
                 const SizedBox(height: 16),
 
@@ -161,15 +170,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Enter your email',
                     prefixIcon: Icon(Icons.email),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                    if (!emailRegex.hasMatch(value)) {
-                      return 'Enter a valid email';
-                    }
-                    return null;
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter your email';
+                    final re = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                    return re.hasMatch(v) ? null : 'Enter a valid email';
                   },
                 ),
                 const SizedBox(height: 16),
@@ -183,14 +187,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Enter password',
                     prefixIcon: Icon(Icons.lock),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please enter a password';
+                    return v.length < 6 ? 'Password must be at least 6 characters' : null;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -204,14 +203,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Re-enter password',
                     prefixIcon: Icon(Icons.lock),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return 'Please confirm your password';
+                    return v != _passwordController.text ? 'Passwords do not match' : null;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -238,15 +232,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     const Text("Already have an account? "),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const SignInPage()),
-                        );
-                      },
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const SignInPage()),
+                      ),
                       child: const Text(
                         "Sign In",
-                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                        style:
+                            TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

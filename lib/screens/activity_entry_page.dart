@@ -238,7 +238,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                   return ChoiceChip(
                     label: Text("$level"),
                     selected: intensity == level,
-                    selectedColor: AppColors.buttonColor,
+                    selectedColor: AppColors.selectedcolor,
                     onSelected: (_) => setState(() => intensity = level),
                   );
                 }),
@@ -265,7 +265,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 FilterChip(
                   label: Text("Scheduled"),
                   selected: status == 'Scheduled',
-                  selectedColor: AppColors.buttonColor,
+                  selectedColor: AppColors.selectedcolor,
                   onSelected: (bool selected) {
                     setState(() {
                       status = selected ? 'Scheduled' : status;
@@ -275,7 +275,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 FilterChip(
                   label: Text("In Progress"),
                   selected: status == 'In Progress',
-                  selectedColor: AppColors.buttonColor,
+                  selectedColor: AppColors.selectedcolor,
                   onSelected: (bool selected) {
                     setState(() {
                       status = selected ? 'In Progress' : status;
@@ -285,7 +285,7 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
                 FilterChip(
                   label: Text("Completed"),
                   selected: status == 'Completed',
-                  selectedColor: AppColors.buttonColor,
+                  selectedColor: AppColors.selectedcolor,
                   onSelected: (bool selected) {
                     setState(() {
                       status = selected ? 'Completed' : status;
