@@ -10,6 +10,7 @@ import 'screens/calendar_page.dart';
 import 'package:athletech/screens/calorie_tracker.dart';
 import 'screens/chat_screen.dart';
 import 'package:athletech/screens/home_page.dart';
+import 'screens/achievements_page.dart';
 import 'screens/profile_page.dart';
 import 'screens/register_page.dart';
 import 'screens/settings.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         '/CalorieTracker': (context) => CalorieTracker(),
         '/chat': (context) => ChatScreen(),
         '/home_page': (context) => HomePage(),
+        '/achievements': (context) => const AchievementsPage(),
         '/profile': (context) => ProfilePage(),
         '/register': (context) => RegisterPage(),
         '/settings': (context) => SettingsScreen(),
