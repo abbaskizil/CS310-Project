@@ -80,14 +80,15 @@ class HomePage extends StatelessWidget {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     padding: AppPaddings.all12,
-                    children: const [
-                      _HighlightCard(
+                    children: [
+                      const _HighlightCard(
                         asset: 'assets/workout_summary.png',
                         title: 'Workout Summary\nCard',
                       ),
                       _HighlightCard(
                         asset: 'assets/achievements.png',
                         title: 'Achievements',
+                        onTap: () => Navigator.pushNamed(context, '/achievements'),
                       ),
                     ],
                   ),
@@ -176,34 +177,48 @@ class _ToolIcon extends StatelessWidget {
 }
 
 class _HighlightCard extends StatelessWidget {
-  const _HighlightCard({required this.asset, required this.title, super.key});
+  const _HighlightCard({
+    required this.asset,
+    required this.title,
+    this.onTap,
+    super.key,
+  });
   final String asset;
   final String title;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: AppPaddings.onlyLeft12,
-      child: SizedBox(
-        width: 180,
-        child: Card(
-          elevation: 2,
-          clipBehavior: Clip.hardEdge,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: Image.asset(asset, fit: BoxFit.cover)),
-              Padding(
-                padding: AppPaddings.all12,
-                child: Text(title, style: kButtonLightTextStyle),
-              ),
-            ],
-          ),
+    final cardBody = SizedBox(
+      width: 180,
+      child: Card(
+        elevation: 2,
+        clipBehavior: Clip.hardEdge,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: Image.asset(asset, fit: BoxFit.cover)),
+            Padding(
+              padding: AppPaddings.all12,
+              child: Text(title, style: kButtonLightTextStyle),
+            ),
+          ],
         ),
       ),
+    );
+
+    return Padding(
+      padding: AppPaddings.onlyLeft12,
+      child: onTap == null
+          ? cardBody
+          : InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: onTap,
+              child: cardBody,
+            ),
     );
   }
 }
