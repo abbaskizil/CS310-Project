@@ -49,14 +49,17 @@ class SocialFeedService {
 }
   
   Stream<List<Map<String, dynamic>>> getComments(String postId) {
-    return _firestore
-        .collection('social_posts')
-        .doc(postId)
-        .collection('comments')
-        .orderBy('createdAt', descending: false)
-        .snapshots()
-        .map((snap) => snap.docs.map((d) => d.data()).toList());
-  }
+  return _firestore
+      .collection('social_posts')
+      .doc(postId)
+      .collection('comments')
+      .orderBy('createdAt', descending: false)
+      .snapshots()
+      .map((snap) => snap.docs
+          .map((d) => d.data())
+          .where((data) => data['createdAt'] != null)
+          .toList());
+}
   /// 2) Add a new comment to that post:
   Future<void> addComment({
     required String postId,
@@ -75,6 +78,5 @@ class SocialFeedService {
         'text':      text,
         'createdAt': FieldValue.serverTimestamp(),
       });
-    print('✅ comment written');
   }
 }

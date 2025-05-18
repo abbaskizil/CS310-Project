@@ -149,10 +149,7 @@ class _CalorieTrackerState extends State<CalorieTracker> {
                     final entries = snapshot.data ?? [];
                     if (entries.isNotEmpty) _sawData = true;
 
-                    // If we've _never_ seen any data, keep loading
-                    if (!_sawData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+                  
 
                     // Now that we know the stream _has_ come back empty, show “No entries”
                     if (entries.isEmpty) {
