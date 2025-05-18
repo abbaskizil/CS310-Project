@@ -2,23 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:athletech/utilities/padding.dart';
 import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
-
-Widget build(BuildContext context) {
-  return MaterialApp(
-    title: 'AthleTech Coach',
-    theme: ThemeData(
-      // primarySwatch: Colors.blue,
-      scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(textStyle: kAppBarTitleTextStyle),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(textStyle: kAppBarTitleTextStyle),
-      ),
-    ),
-    home: const ChatScreen(),
-  );
-}
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -35,7 +20,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Add welcome message with current time
     _addWelcomeMessage();
   }
 
@@ -59,11 +43,12 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage() {
     if (_messageController.text.isNotEmpty) {
       final now = DateTime.now();
+      final userMessage = _messageController.text;
+
       setState(() {
-        // Add user message with current time
         _messages.add(
           ChatMessage(
-            text: _messageController.text,
+            text: userMessage,
             isUser: true,
             time: _formatTime(now),
           ),
@@ -71,19 +56,50 @@ class _ChatScreenState extends State<ChatScreen> {
         _messageController.clear();
       });
 
-      // Simulate AI response after a short delay
-      Future.delayed(const Duration(seconds: 1), () {
+      fetchApiResponse(userMessage).then((apiResponse) {
         final responseTime = DateTime.now();
         setState(() {
           _messages.add(
             ChatMessage(
-              text: "Thanks for your message! How can I assist you further?",
+              text: apiResponse,
               isUser: false,
               time: _formatTime(responseTime),
             ),
           );
         });
       });
+    }
+  }
+
+  Future<String> fetchApiResponse(String userMessage) async {
+    final url = Uri.parse("https://api.kluster.ai/v1/chat/completions");
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer 439fae59-866f-42b9-ac8e-6749c831ea53", // ← Buraya kendi API key’ini yaz
+        },
+        body: json.encode({
+          "model": "klusterai/Meta-Llama-3.1-8B-Instruct-Turbo",
+          "messages": [
+            {
+              "role": "user",
+              "content": userMessage,
+            }
+          ]
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data["choices"][0]["message"]["content"] ?? "No response.";
+      } else {
+        return "Error ${response.statusCode}: ${response.body}";
+      }
+    } catch (e) {
+      return "Failed to reach server: $e";
     }
   }
 
@@ -106,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
           backgroundColor: AppColors.appBarColor,
           title: Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: AssetImage('assets/coach.png'),
                 radius: 20,
               ),
@@ -117,22 +133,20 @@ class _ChatScreenState extends State<ChatScreen> {
           centerTitle: true,
           elevation: 0,
         ),
-        body: Container(
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: AppPaddings.all12,
-                  reverse: true, // Helps with keyboard appearance
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    return _messages.reversed.toList()[index];
-                  },
-                ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: AppPaddings.all12,
+                reverse: true,
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  return _messages.reversed.toList()[index];
+                },
               ),
-              _buildMessageInput(),
-            ],
-          ),
+            ),
+            _buildMessageInput(),
+          ],
         ),
       ),
     );
@@ -194,7 +208,7 @@ class ChatMessage extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Column(
         crossAxisAlignment:
-            isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(12.0),
