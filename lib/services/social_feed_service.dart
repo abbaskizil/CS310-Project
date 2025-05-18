@@ -33,14 +33,50 @@ class SocialFeedService {
 
 
   Stream<List<Map<String, dynamic>>> getPosts() {
-    return _firestore
-        .collection('social_posts')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-          .map((doc) => doc.data())
-          .toList(),
-    );
+  return _firestore
+    .collection('social_posts')
+    .orderBy('createdAt', descending: true)
+    .snapshots()
+    .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'id': doc.id,       // <-- add the id here
+          ...data,            // <-- merge in all your other fields
+        };
+      }).toList();
+    });
+}
+  
+  Stream<List<Map<String, dynamic>>> getComments(String postId) {
+  return _firestore
+      .collection('social_posts')
+      .doc(postId)
+      .collection('comments')
+      .orderBy('createdAt', descending: false)
+      .snapshots()
+      .map((snap) => snap.docs
+          .map((d) => d.data())
+          .where((data) => data['createdAt'] != null)
+          .toList());
+}
+  /// 2) Add a new comment to that post:
+  Future<void> addComment({
+    required String postId,
+    required String text,
+  }) async {
+    final uid  = _auth.currentUser?.uid;
+    final name = _auth.currentUser?.displayName ?? 'Anon';
+    print('Adding comment to post $postId: $text by $uid');
+    await _firestore
+      .collection('social_posts')
+      .doc(postId)
+      .collection('comments')      // ← this must match your UI’s getComments path
+      .add({
+        'uid':       uid,
+        'username':  name,
+        'text':      text,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
   }
 }

@@ -25,7 +25,7 @@ final kButtonDarkTextStyle = TextStyle(
 
 final kAppBarTitleTextStyle = TextStyle(
   fontFamily: 'Roboto',
-  color: const Color.fromARGB(255, 0, 0, 0),
+  color: const Color.fromARGB(255, 244, 239, 239),
   fontSize: 24.0,
   fontWeight: FontWeight.w600, // SemiBold
   letterSpacing: -0.7,

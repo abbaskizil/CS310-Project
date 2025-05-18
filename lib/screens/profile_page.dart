@@ -449,21 +449,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           value: _gender,
-                          items:
-                              ['Male', 'Female', 'Other']
-                                  .map(
-                                    (g) => DropdownMenuItem(
-                                      value: g,
-                                      child: Text(g),
-                                    ),
-                                  )
-                                  .toList(),
+                          decoration: const InputDecoration(labelText: 'Gender'),
+                          items: <String>[
+                            'Male',
+                            'Female',
+                            'Other',
+                            'Unspecified',  // ← add this
+                          ].map((g) {
+                            return DropdownMenuItem(
+                              value: g,
+                              child: Text(g),
+                            );
+                          }).toList(),
                           onChanged: (value) {
                             if (value != null) setState(() => _gender = value);
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Gender',
-                          ),
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
