@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 import 'package:athletech/utilities/padding.dart';
@@ -19,26 +20,105 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // split name into first + surname
   final _firstNameController = TextEditingController();
-  final _surnameController   = TextEditingController();
-  final _emailController     = TextEditingController();
-  final _passwordController  = TextEditingController();
-  final _confirmController   = TextEditingController();
+  final _surnameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
 
   final _userService = UserService();
   bool _isLoading = false;
+
+  final List<Map<String, dynamic>> defaultAchievements = [
+    {
+      'title': 'First Workout',
+      'description': 'Complete your first workout session.',
+      'icon': 'fitness_center',
+      'completed': false,
+      'progress': 0,
+      'goal': 1,
+    },
+    {
+      'title': 'Workout for 10 Hours',
+      'description': 'Reach 10 hours of total workout time.',
+      'icon': 'calendar_today',
+      'completed': false,
+      'progress': 0,
+      'goal': 600, // in minutes
+    },
+    {
+      'title': 'Burn 10,000 Calories',
+      'description': 'Burn a total of 10,000 calories through workouts.',
+      'icon': 'fitness_center',
+      'completed': false,
+      'progress': 0,
+      'goal': 10000,
+    },
+    {
+      'title': 'Morning Warrior',
+      'description': 'Work out in the morning 10 times.',
+      'icon': 'wb_sunny_outlined',
+      'completed': false,
+      'progress': 0,
+      'goal': 10,
+    },
+  ];
+
+  final Map<String, dynamic> welcomeAchievement = {
+    'title': 'Welcome to AthleteTech!',
+    'description': 'Thanks for joining – let’s get moving!',
+    'icon': 'star',
+    'completed': true,
+    'dateEarned': Timestamp.now(),
+  };
+
+  Future<void> ensureInitialAchievements() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final achievementsRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('achievements');
+
+    final snapshot = await achievementsRef.limit(1).get();
+
+    if (snapshot.docs.isEmpty) {
+      final batch = FirebaseFirestore.instance.batch();
+
+      // Add welcome achievement first (already completed)
+      final welcomeDocRef = achievementsRef.doc();
+      batch.set(welcomeDocRef, welcomeAchievement);
+
+      // Add all default achievements (incomplete, progress = 0, dateEarned = null)
+      for (final achievement in defaultAchievements) {
+        final docRef = achievementsRef.doc();
+        final data = Map<String, dynamic>.from(achievement);
+        data['dateEarned'] = null;
+        batch.set(docRef, data);
+      }
+
+      await batch.commit();
+    }
+  }
 
   void _register() async {
     if (!_formKey.currentState!.validate()) {
       // show invalid‐form alert
       showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Invalid Form'),
-          content: const Text('Please correct the errors before proceeding.'),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
-          ],
-        ),
+        builder:
+            (_) => AlertDialog(
+              title: const Text('Invalid Form'),
+              content: const Text(
+                'Please correct the errors before proceeding.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
       );
       return;
     }
@@ -46,28 +126,33 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() => _isLoading = true);
     try {
       // 1) Create Auth user
-      final cred = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
+      final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
       // 2) Update displayName
-      final fullName = '${_firstNameController.text.trim()} '
-                       '${_surnameController.text.trim()}';
+      final fullName =
+          '${_firstNameController.text.trim()} '
+          '${_surnameController.text.trim()}';
       await cred.user!.updateDisplayName(fullName);
 
       // 3) Write initial Firestore doc with defaults
       await _userService.createUserProfile(
-        name:    _firstNameController.text.trim(),
+        name: _firstNameController.text.trim(),
         surname: _surnameController.text.trim(),
       );
+      @override
+      void initState() {
+        super.initState();
+        ensureInitialAchievements().then((_) => setState(() {}));
+      }
 
-      Fluttertoast.showToast(msg: "Registration Successful!");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const SignInPage()),
       );
+      MaterialPageRoute(builder: (_) => const SignInPage());
     } on FirebaseAuthException catch (e) {
       String message;
       switch (e.code) {
@@ -85,13 +170,17 @@ class _RegisterPageState extends State<RegisterPage> {
       }
       showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Registration Failed'),
-          content: Text(message),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
-          ],
-        ),
+        builder:
+            (_) => AlertDialog(
+              title: const Text('Registration Failed'),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -131,8 +220,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 Text('Welcome to AthleTech!', style: kButtonDarkTextStyle),
                 const SizedBox(height: 8),
-                Text('Your Fitness Journey Companion',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                Text(
+                  'Your Fitness Journey Companion',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                ),
                 const SizedBox(height: 30),
 
                 // First Name
@@ -143,8 +234,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Enter your first name',
                     prefixIcon: Icon(Icons.person),
                   ),
-                  validator: (v) =>
-                      v == null || v.isEmpty ? 'Please enter your first name' : null,
+                  validator:
+                      (v) =>
+                          v == null || v.isEmpty
+                              ? 'Please enter your first name'
+                              : null,
                 ),
                 const SizedBox(height: 16),
 
@@ -156,8 +250,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: 'Enter your surname',
                     prefixIcon: Icon(Icons.person_outline),
                   ),
-                  validator: (v) =>
-                      v == null || v.isEmpty ? 'Please enter your surname' : null,
+                  validator:
+                      (v) =>
+                          v == null || v.isEmpty
+                              ? 'Please enter your surname'
+                              : null,
                 ),
                 const SizedBox(height: 16),
 
@@ -171,7 +268,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: Icon(Icons.email),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Please enter your email';
+                    if (v == null || v.isEmpty)
+                      return 'Please enter your email';
                     final re = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                     return re.hasMatch(v) ? null : 'Enter a valid email';
                   },
@@ -188,8 +286,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: Icon(Icons.lock),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Please enter a password';
-                    return v.length < 6 ? 'Password must be at least 6 characters' : null;
+                    if (v == null || v.isEmpty)
+                      return 'Please enter a password';
+                    return v.length < 6
+                        ? 'Password must be at least 6 characters'
+                        : null;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -204,8 +305,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     prefixIcon: Icon(Icons.lock),
                   ),
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Please confirm your password';
-                    return v != _passwordController.text ? 'Passwords do not match' : null;
+                    if (v == null || v.isEmpty)
+                      return 'Please confirm your password';
+                    return v != _passwordController.text
+                        ? 'Passwords do not match'
+                        : null;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -218,9 +322,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.buttonColor,
                     ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text('Register', style: kButtonLightTextStyle),
+                    child:
+                        _isLoading
+                            ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                            : Text('Register', style: kButtonLightTextStyle),
                   ),
                 ),
 
@@ -232,14 +339,19 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     const Text("Already have an account? "),
                     GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const SignInPage()),
-                      ),
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SignInPage(),
+                            ),
+                          ),
                       child: const Text(
                         "Sign In",
-                        style:
-                            TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
