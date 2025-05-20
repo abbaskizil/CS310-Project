@@ -86,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
           "messages": [
             {
               "role": "user",
-              "content": userMessage,
+              "content": userMessage + " keep it short",
             }
           ]
         }),
