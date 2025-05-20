@@ -81,10 +81,12 @@ class HomePage extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     padding: AppPaddings.all12,
                     children: [
-                      const _HighlightCard(
+                      _HighlightCard(
                         asset: 'assets/workout_summary.png',
                         title: 'Workout Summary\nCard',
+                        onTap: () => Navigator.pushNamed(context, '/workout_summary'), // EKLENDİ
                       ),
+
                       _HighlightCard(
                         asset: 'assets/achievements.png',
                         title: 'Achievements',
