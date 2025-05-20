@@ -76,7 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
             final profileData = snapshot.data![0].data() as Map<String, dynamic>;
             final stats = snapshot.data![1] as Map<String, dynamic>;
-            print(stats);
 
             // Extract profile fields...
             final name = profileData['name'] ?? 'N/A';

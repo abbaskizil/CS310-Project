@@ -1,3 +1,4 @@
+import 'package:athletech/services/workout_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:athletech/services/social_feed_service.dart';
@@ -44,5 +45,7 @@ class ActivityService {
     if (shareToSocialFeed) {
       await SocialFeedService().shareActivity(activityData: data);
     }
+    await WorkoutService().updateAchievementProgress();
+
   }
 }
