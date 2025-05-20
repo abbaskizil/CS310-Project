@@ -35,22 +35,33 @@ class _WorkoutSummaryPageState extends State<WorkoutSummaryPage> {
       int totalCalories = 0;
       int totalDuration = 0;
       int workoutCount = 0;
+      List<Map<String, dynamic>> activityDetails = [];
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final calories = data['caloriesBurned'];
         final duration = data['duration'];
+        final type = data['type'] ?? 'Workout';
+        final note = data['note'] ?? '';
 
         if (calories is num) totalCalories += calories.toInt();
         if (duration is num) totalDuration += duration.toInt();
 
         workoutCount++;
+
+        activityDetails.add({
+          'title': type,
+          'duration': duration,
+          'calories': calories,
+          'note': note,
+        });
       }
 
       return {
         'workouts': workoutCount,
         'caloriesBurnt': totalCalories,
         'duration': totalDuration,
+        'activities': activityDetails,
       };
     } catch (e) {
       debugPrint("WorkoutSummary error: $e");
@@ -74,22 +85,47 @@ class _WorkoutSummaryPageState extends State<WorkoutSummaryPage> {
           }
 
           final stats = snapshot.data ?? {};
-
           final totalWorkouts = _safeToInt(stats['workouts']);
           final totalCalories = _safeToInt(stats['caloriesBurnt']);
           final totalDuration = _safeToInt(stats['duration']);
+          final List activities = stats['activities'] ?? [];
 
           return Padding(
             padding: AppPaddings.all16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildStatCard('Total Workouts', totalWorkouts),
-                const SizedBox(height: 12),
-                _buildStatCard('Total Duration (min)', totalDuration),
-                const SizedBox(height: 12),
-                _buildStatCard('Total Calories Burned', totalCalories),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (activities.isNotEmpty) ...[
+                    Text('Activities:', style: kButtonLightTextStyle.copyWith(fontSize: 16)),
+                    const SizedBox(height: 10),
+                    ...activities.map((activity) => Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              activity['title'],
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Text('Duration: ${activity['duration']} min'),
+                            if (activity['calories'] != null && activity['calories'] > 0)
+                              Text('Calories: ${activity['calories']}'),
+                            if (activity['note'] != null && activity['note'].toString().isNotEmpty)
+                              Text('Notes: ${activity['note']}'),
+                          ],
+                        ),
+                      ),
+                    )),
+                  ],
+                ],
+              ),
             ),
           );
         },
