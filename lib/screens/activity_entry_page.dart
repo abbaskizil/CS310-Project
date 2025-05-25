@@ -191,37 +191,48 @@ class _ActivityEntryPageState extends State<ActivityEntryPage> {
             const SizedBox(height: 16),
             Row(
               children: [
-                Text("Duration: ", style: kButtonLightTextStyle),
+                Text("Duration:", style: kButtonLightTextStyle),
 
-                ElevatedButton(
-                  onPressed: () => setState(() {
-                    duration = duration > 5 ? duration - 5 : 0;
-                  }),
-                  child: const Text('-5'),
-                ),
-                const SizedBox(width: 8),
-                // Minus 1 Button
-                ElevatedButton(
-                  onPressed: () => setState(() {
-                    duration = duration > 0 ? duration - 1 : 0;
-                  }),
-                  child: const Text('-1'),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text("$duration minutes", style: kButtonLightTextStyle),
-                ),
-                const SizedBox(width: 16),
-
-                ElevatedButton(
-                  onPressed: () => setState(() => duration = duration + 1),
-                  child: const Text('+1'),
-                ),
                 const SizedBox(width: 8),
 
-                ElevatedButton(
-                  onPressed: () => setState(() => duration = duration + 5),
-                  child: const Text('+5'),
+                // –5, –1 buttons on the left
+                Row(
+                  children: [
+                    ElevatedButton(onPressed: () {
+                      setState(() {
+                        duration = duration > 5 ? duration - 5 : 0;
+                      });
+                    }, child: const Text('-5')),
+                    const SizedBox(width: 8),
+                    ElevatedButton(onPressed: () {
+                      setState(() {
+                        duration = duration > 0 ? duration - 1 : 0;
+                      });
+                    }, child: const Text('-1')),
+                  ],
+                ),
+
+                Spacer(),  // ← pushes the text to the center
+
+                // The duration text
+                Text(
+                  "$duration minutes",
+                  style: kButtonLightTextStyle.copyWith(fontSize: 18),
+                ),
+
+                Spacer(),  // ← pushes the + buttons to the right
+
+                // +1, +5 buttons on the right
+                Row(
+                  children: [
+                    ElevatedButton(onPressed: () {
+                      setState(() => duration = duration + 1);
+                    }, child: const Text('+1')),
+                    const SizedBox(width: 8),
+                    ElevatedButton(onPressed: () {
+                      setState(() => duration = duration + 5);
+                    }, child: const Text('+5')),
+                  ],
                 ),
               ],
             ),

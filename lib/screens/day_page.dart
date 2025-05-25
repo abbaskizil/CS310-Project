@@ -54,9 +54,14 @@ class _DayPageState extends State<DayPage> {
       final activityDateKey = '${date.year}-${date.month}-${date.day}';
 
       temp.putIfAbsent(activityDateKey, () => []).add({
-        'color': Colors.blueAccent,
-        'title': data['type'] ?? 'Workout',
-        'subtitle': 'Duration: ${data['duration']} min\nNotes: ${data['note']}',
+        'id'      : doc.id,
+        'color'   : Colors.blueAccent,
+        'title'   : data['type']    ?? 'Workout',
+        'duration': data['duration']?? 0,
+        'note'    : data['note']    as String? ?? '',
+        'status'  : data['status']  as String? ?? 'Scheduled',
+        'calories': (data['caloriesBurned'] as num?)?.toInt() ?? 0,  // ← new
+        'subtitle': 'Duration: ${data['duration'] ?? 0} min\nNotes: ${data['note'] ?? ''}',
       });
     }
 
@@ -180,23 +185,83 @@ class _DayPageState extends State<DayPage> {
               ),
               const SizedBox(height: 20),
               // Use the activitiesForSelectedDay list for display
-              Expanded( // Wrap the list of activities in Expanded and use ListView
-                 child: ListView.builder(
-                   itemCount: activitiesForSelectedDay.length,
-                   itemBuilder: (context, index) {
-                     final activity = activitiesForSelectedDay[index];
-                     return Column(
+              Expanded(
+                child: ListView.builder(
+                  itemCount: activitiesForSelectedDay.length,
+                  itemBuilder: (context, index) {
+                    final activity = activitiesForSelectedDay[index];
+
+                    // null‐safe reads
+                    final title    = activity['title']    as String? ?? 'Workout';
+                    final duration = activity['duration'] as int?    ?? 0;
+                    final note     = activity['note']     as String? ?? '';
+                    final status   = activity['status']   as String? ?? 'Incomplete';
+                    final color    = activity['color']    as Color?  ?? Colors.grey;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
                         children: [
-                           _activityItem(
-                             color: activity['color'], // Make sure color is stored if needed
-                             title: activity['title'],
-                             subtitle: activity['subtitle'],
-                           ),
-                           const SizedBox(height: 10),
+                          // • dot
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                          ),
+                          const SizedBox(width: 10),
+
+                          // • text block
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 17)),
+                                Text('Duration: $duration min'),
+                                if (note.isNotEmpty) Text('Notes: $note'),
+                                Text('Status: $status'),
+                                if (status == 'Completed')
+                                  Text('Calories: ${activity['calories'] as int? ?? 0}'),
+                              ],
+                            ),
+                          ),
+
+                          // — Edit button
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blueGrey),
+                            tooltip: 'Edit entry',
+                            onPressed: () => _showEditDialog(selectedDate, index),
+                          ),
+
+                          // — Status dropdown (marking)
+                          PopupMenuButton<String>(
+                            icon: const Icon(Icons.flag_outlined),
+                            tooltip: 'Change status',
+                            onSelected: (newStatus) {
+                            if (newStatus == 'Completed')
+                                _showCaloriesDialog(selectedDate, index);
+                            else
+                                _updateStatus(selectedDate, index, newStatus);
+                            },
+                            itemBuilder: (_) => const [
+                              PopupMenuItem(value: 'Scheduled',  child: Text('Scheduled')),
+                              PopupMenuItem(value: 'In Progress', child: Text('In Progress')),
+                              PopupMenuItem(value: 'Completed',   child: Text('Completed')),
+                            ],
+                          ),
+
+                          // — Delete button
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline, color: Colors.red),
+                            tooltip: 'Delete entry',
+                            onPressed: () => _deleteEntry(selectedDate, index),
+                          ),
                         ],
-                     );
-                   },
-                 ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -215,46 +280,22 @@ class _DayPageState extends State<DayPage> {
     return monthNames[month];
   }
 
+  Future<void> _updateStatus(
+      DateTime day, int index, String newStatus) async {
+    final key = '${day.year}-${day.month}-${day.day}';
+    final workout = activities[key]![index];
+    final docId = workout['id'] as String;
 
-  Widget _activityItem({
-    required Color color,
-    required String title,
-    required String subtitle,
-  }) {
-    return Row(
-      children: [
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                subtitle,
-                style: const TextStyle(color: Colors.grey, fontSize: 15),
-              ),
-            ],
-          ),
-        ),
-        const CircleAvatar(
-          radius: 14,
-          backgroundColor: Colors.white,
-          child: Icon(Icons.add_circle_outline, size: 20, color: Colors.grey),
-        ),
-      ],
-    );
+    // 1) Write it back to Firestore
+    await FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(docId)
+        .update({'status': newStatus});
+
+    // 2) And update local state so the UI refreshes instantly
+    setState(() {
+      activities[key]![index]['status'] = newStatus;
+    });
   }
 
   static Widget _dayColumn(
@@ -307,4 +348,151 @@ class _DayPageState extends State<DayPage> {
       ],
     );
   }
+  
+  Future<void> _deleteEntry(DateTime day, int index) async {
+    final key = '${day.year}-${day.month}-${day.day}';
+    final workout = activities[key]![index];
+    final docId = workout['id'] as String;
+
+    // 1) Remove from Firestore
+    await FirebaseFirestore.instance
+        .collection('workouts')
+        .doc(docId)
+        .delete();
+
+    // 2) Remove locally so UI updates
+    setState(() {
+      activities[key]!.removeAt(index);
+      if (activities[key]!.isEmpty) {
+        activities.remove(key);
+        workoutDays.remove(day.day.toString());
+      }
+    });
+  }
+
+  void _showEditDialog(DateTime day, int index) {
+    final key = '${day.year}-${day.month}-${day.day}';
+    final workout = activities[key]![index];
+
+    // start values
+    String titleVal    = workout['title']    as String? ?? 'Strength';
+    final durationCtl = TextEditingController(
+        text: (workout['duration'] as int?)?.toString() ?? '0');
+    final noteCtl     = TextEditingController(text: workout['note'] as String? ?? '');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Edit Workout'),
+        content: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+
+            // Style dropdown only
+            DropdownButtonFormField<String>(
+              value: titleVal,
+              decoration: const InputDecoration(labelText: 'Workout Style'),
+              items: const [
+                DropdownMenuItem(value: 'Strength',  child: Text('Strength')),
+                DropdownMenuItem(value: 'Cycling',   child: Text('Cycling')),
+                DropdownMenuItem(value: 'Core&Abs',  child: Text('Core&Abs')),
+                DropdownMenuItem(value: 'Pilates',   child: Text('Pilates')),
+              ],
+              onChanged: (v) { if (v!=null) titleVal=v; },
+            ),
+
+            const SizedBox(height: 12),
+
+            // Duration field
+            TextField(
+              controller: durationCtl,
+              decoration: const InputDecoration(labelText: 'Duration (min)'),
+              keyboardType: TextInputType.number,
+            ),
+
+            const SizedBox(height: 12),
+
+            // Notes field
+            TextField(
+              controller: noteCtl,
+              decoration: const InputDecoration(labelText: 'Notes'),
+            ),
+          ]),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              final newDuration = int.tryParse(durationCtl.text.trim())
+                                  ?? (workout['duration'] as int? ?? 0);
+              final newNote     = noteCtl.text.trim();
+
+              // update Firestore
+              await FirebaseFirestore.instance
+                  .collection('workouts')
+                  .doc(workout['id'] as String)
+                  .update({
+                'type':     titleVal,
+                'duration': newDuration,
+                'note':     newNote,
+              });
+
+              // update local
+              setState(() {
+                workout['title']    = titleVal;
+                workout['duration'] = newDuration;
+                workout['note']     = newNote;
+              });
+
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showCaloriesDialog(DateTime day, int index) async {
+    final key = '${day.year}-${day.month}-${day.day}';
+    final workout = activities[key]![index];
+    final existing = workout['calories'] as int? ?? 0;
+    final ctl = TextEditingController(text: existing.toString());
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Enter Calories Burned'),
+        content: TextField(
+          controller: ctl,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: 'Calories'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              final cal = int.tryParse(ctl.text.trim()) ?? existing;
+              final docId = workout['id'] as String;
+              // 1) Update Firestore
+              await FirebaseFirestore.instance
+                  .collection('workouts')
+                  .doc(docId)
+                  .update({
+                'status': 'Completed',
+                'caloriesBurned': cal,
+              });
+              // 2) Update local state
+              setState(() {
+                workout['status']   = 'Completed';
+                workout['calories'] = cal;
+              });
+              Navigator.of(ctx).pop();
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
