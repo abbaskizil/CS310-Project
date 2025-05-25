@@ -35,14 +35,6 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          _ActionChip(icon: Icons.favorite_border, label: 'Favorites'),
-                          _ActionChip(icon: Icons.history, label: 'History'),
-                          _ActionChip(icon: Icons.smart_toy_outlined, label: 'AI'),
-                        ],
-                      ),
                       const SizedBox(height: 16),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -53,8 +45,8 @@ class HomePage extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      _SectionHeader(title: 'Tools', onTap: () {}),
+                      const SizedBox(height: 30),
+                      _SectionHeader(title: 'Tools'),
                       const SizedBox(height: 8),
                       Padding(
                         padding: AppPaddings.horizontal20Vertical12,
@@ -64,12 +56,11 @@ class HomePage extends StatelessWidget {
                             tool(Icons.monitor_weight_outlined, 'BMI\n', '/bmi'),
                             tool(Icons.local_fire_department, 'Calorie\nTracker', '/CalorieTracker'),
                             tool(CupertinoIcons.chart_pie, 'Activity\nEntry', '/activity_entry'),
-                            tool(Icons.people, 'Social\nFeed', '/social_feed'),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      _SectionHeader(title: "Today's Highlights", onTap: () {}),
+                      const SizedBox(height: 25),
+                      _SectionHeader(title: "Today's Highlights"),
                     ],
                   ),
                 ),
@@ -91,6 +82,46 @@ class HomePage extends StatelessWidget {
                         asset: 'assets/achievements.png',
                         title: 'Achievements',
                         onTap: () => Navigator.pushNamed(context, '/achievements'),
+                      ),
+
+                      Padding(
+                        padding: AppPaddings.onlyLeft12,
+                        child: SizedBox(
+                          width: 180,
+                          child: Card(
+                            elevation: 2,
+                            clipBehavior: Clip.hardEdge,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: InkWell(
+                              onTap: () => Navigator.pushNamed(context, '/social_feed'),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.people,
+                                        size: 64,
+                                        color: AppColors.buttonColor,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    color: AppColors.buttonColor.withOpacity(0.1),
+                                    padding: AppPaddings.all12,
+                                    child: Text(
+                                      'Social Feed',
+                                      textAlign: TextAlign.center,
+                                      style: kButtonLightTextStyle,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -124,19 +155,12 @@ class _ActionChip extends StatelessWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.onTap, super.key});
+  const _SectionHeader({required this.title, super.key});
   final String title;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: kButtonLightTextStyle),
-        IconButton(icon: const Icon(Icons.chevron_right), onPressed: onTap),
-      ],
-    );
+    return Text(title, style: kButtonLightTextStyle);
   }
 }
 
