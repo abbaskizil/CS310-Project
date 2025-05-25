@@ -3,6 +3,7 @@ import 'package:athletech/utilities/styles.dart';
 import 'package:athletech/utilities/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -176,7 +177,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Password successfully updated.')),
         );
-        Navigator.of(context).pushNamedAndRemoveUntil('/sign_in', (r) => false);
+        Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {
       setState(() { _error = e.message; });
